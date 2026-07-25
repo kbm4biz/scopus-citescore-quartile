@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layout variation fixture</title>
+  <link rel="stylesheet" href="fixture.css">
+</head>
+<body>
+  <main>
+    <h1>Flexible Layout Quarterly</h1>
+    <section class="source-metrics"><dl><div><dt>CiteScore</dt><dd>5</dd></div></dl></section>
+    <section class="rank-section" role="region" aria-labelledby="trend-heading">
+      <h3 id="trend-heading">Rank &amp; trend</h3>
+      <button type="button" aria-pressed="true">2022</button>
+      <article class="category-card">
+        <p><strong>Subject field</strong><span>Decision Sciences</span></p>
+        <p><strong>Percentile</strong><span>50th percentile</span></p>
+        <p><strong>Rank</strong><span>Rank 100 of 200</span></p>
+      </article>
+      <article class="category-card">
+        <p><strong>In category</strong><span>Information Systems</span></p>
+        <p aria-label="Percentile 25">25</p>
+        <p aria-label="Rank #150/300">150/300</p>
+      </article>
+      <div hidden>In category Hidden Numbers Percentile 99 Rank 1/1</div>
+    </section>
+  </main>
+  <script src="fixture-bootstrap.js"></script>
+  <script src="fixture-loader.js"></script>
+</body>
+</html>

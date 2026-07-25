@@ -1,0 +1,38 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: #182d35;
+  background: #eef3f5;
+  font: 15px/1.5 Arial, sans-serif;
+}
+main {
+  width: min(1050px, calc(100% - 32px));
+  margin: 24px auto;
+}
+h1 { color: #103f4b; }
+.source-metrics,
+.rank-section {
+  margin-block: 16px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #cbd9de;
+  border-radius: 8px;
+}
+dl { margin: 0; }
+dt { color: #50636a; font-weight: 700; }
+dd { margin-inline-start: 0; margin-block-end: 8px; }
+.category-card {
+  display: inline-block;
+  width: calc(50% - 12px);
+  margin: 6px;
+  padding: 14px;
+  vertical-align: top;
+  background: #f7fafb;
+  border: 1px solid #d5e1e5;
+  border-radius: 6px;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px; border: 1px solid #d7e2e5; text-align: start; }
+thead { color: white; background: #276878; }
+.loading { padding: 30px; background: white; }
+@media (max-width: 700px) { .category-card { width: 100%; margin-inline: 0; } }

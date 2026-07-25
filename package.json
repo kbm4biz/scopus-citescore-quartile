@@ -1,0 +1,23 @@
+{
+  "name": "scopus-citescore-quartile",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One Vite codebase that builds a Manifest V3 Chrome extension and a mobile userscript.",
+  "packageManager": "pnpm@11.9.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "pnpm run build:desktop && pnpm run build:mobile",
+    "build:desktop": "vite build --config vite.desktop.config.js && node scripts/finish-desktop-build.mjs",
+    "build:mobile": "vite build --config vite.mobile.config.js && node scripts/write-mobile-index.mjs",
+    "test": "pnpm run build && node --test tests/*.test.js && node tests/browser-tests.mjs",
+    "test:unit": "node --test tests/*.test.js",
+    "test:browser": "node tests/browser-tests.mjs"
+  },
+  "devDependencies": {
+    "vite": "8.1.5",
+    "vite-plugin-monkey": "8.1.0"
+  }
+}

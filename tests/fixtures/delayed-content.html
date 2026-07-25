@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delayed content fixture</title>
+  <link rel="stylesheet" href="fixture.css">
+</head>
+<body>
+  <main id="app">
+    <h1>Dynamic Research Review</h1>
+    <p class="loading">Scopus-style content is loading…</p>
+  </main>
+  <script src="fixture-bootstrap.js"></script>
+  <script src="fixture-loader.js"></script>
+  <script>
+    setTimeout(() => {
+      const app = document.getElementById("app");
+      const loading = document.querySelector(".loading");
+      loading.remove();
+      const metrics = document.createElement("section");
+      metrics.className = "source-metrics";
+      metrics.innerHTML = "<dl><div><dt>CiteScore</dt><dd id=\"dynamic-score\">3.9</dd></div></dl>";
+      const rank = document.createElement("section");
+      rank.className = "rank-section";
+      rank.innerHTML = `
+        <h2>CiteScore rank</h2>
+        <p>CiteScore rank year: <span id="dynamic-year">2023</span></p>
+        <article class="category-card">
+          <p><strong>In category</strong> <span id="dynamic-category">Education</span></p>
+          <p><strong>Percentile</strong> <span id="dynamic-percentile">24%</span></p>
+          <p><strong>Rank</strong> <span id="dynamic-rank">300/400</span></p>
+        </article>`;
+      app.append(metrics, rank);
+    }, 350);
+
+    setTimeout(() => {
+      document.getElementById("dynamic-score").textContent = "4.2";
+      document.getElementById("dynamic-year").textContent = "2024";
+      document.getElementById("dynamic-category").textContent = "Computer Science Applications";
+      document.getElementById("dynamic-percentile").textContent = "75%";
+      document.getElementById("dynamic-rank").textContent = "80/500";
+      document.querySelector(".rank-section").setAttribute("aria-expanded", "true");
+      document.querySelector(".rank-section").dispatchEvent(new Event("change", { bubbles: true }));
+    }, 900);
+  </script>
+</body>
+</html>
