@@ -7,7 +7,8 @@ import { DEFAULT_SETTINGS } from "../platform/settings-store.js";
 export function initialiseScopusApp({
   settingsStore,
   mode = "desktop",
-  clipboardWriter = null
+  clipboardWriter = null,
+  version = ""
 }) {
   const globalScope = window;
   const loadedKey = mode === "mobile" ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
@@ -304,12 +305,15 @@ export function initialiseScopusApp({
     fab.setAttribute("aria-expanded", String(mobileDrawerOpen));
     fab.setAttribute(
       "aria-label",
-      `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.`
+      `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.${version ? ` Version ${version}.` : ""}`
     );
     const fabQuartile = createElement(
       "span",
-      `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`,
-      best || "Q?"
+      `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`
+    );
+    fabQuartile.append(
+      createElement("span", "scsq-mobile-fab__quartile-value", best || "Q?"),
+      createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : "")
     );
     fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
 

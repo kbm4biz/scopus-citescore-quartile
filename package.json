@@ -1,6 +1,6 @@
 {
   "name": "scopus-citescore-quartile",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "type": "module",
   "description": "One Vite codebase that builds a Manifest V3 Chrome extension and a mobile userscript.",

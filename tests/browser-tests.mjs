@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.dirname(testsDirectory);
 const desktopExtensionRoot = path.join(projectRoot, "dist", "desktop");
+const packageJson = JSON.parse(await readFile(path.join(projectRoot, "package.json"), "utf8"));
 const chromeCandidates = [
   process.env.CHROME_PATH,
   "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -210,6 +211,11 @@ try {
   assert.equal(count(mobile, 'class="scsq-mobile-fab"'), 1, "mobile fixture should have exactly one floating action button");
   assert.equal(count(mobile, 'id="scsq-mobile-drawer"'), 1, "mobile fixture should have exactly one drawer");
   assert.match(mobile, /scsq-mobile-drawer is-open/);
+  assert.match(
+    mobile,
+    new RegExp(`scsq-mobile-fab__version[^>]*>v${packageJson.version.replaceAll(".", "\\.")}<`),
+    "mobile floating button should show the installed version below its Q value"
+  );
   assert.equal(count(mobile, 'data-scsq-inline="true"'), 4, "mobile fixture should add one inline badge per category");
   for (const quartile of ["q1", "q2", "q3", "q4"]) {
     assert.match(mobile, new RegExp(`scsq-badge--${quartile}`), `mobile fixture should include ${quartile.toUpperCase()}`);
@@ -240,6 +246,14 @@ try {
   await captureFixture(
     chromePath,
     baseUrl,
+    "multiple-categories.html?mode=mobile",
+    2200,
+    "mobile-floating-button.png",
+    "600,900"
+  );
+  await captureFixture(
+    chromePath,
+    baseUrl,
     "multiple-categories.html?mode=mobile&open=1",
     2200,
     "mobile-multiple-categories.png",
@@ -256,7 +270,7 @@ try {
 
   console.log("Browser fixture tests: 7/7 passed in headless Chromium.");
   console.log("Manifest V3 unpacked-extension load smoke: passed.");
-  console.log("Fixture screenshots: 7 written to tests/screenshots for visual QA.");
+  console.log("Fixture screenshots: 8 written to tests/screenshots for visual QA.");
   console.log(`Browser used: ${chromePath}`);
 } finally {
   await new Promise((resolve) => server.close(resolve));

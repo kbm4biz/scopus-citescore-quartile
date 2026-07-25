@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Scopus CiteScore Quartile
 // @namespace    scopus-citescore-quartile
-// @version      2.0.0
+// @version      2.0.1
 // @author       Local build
 // @description  Shows category-specific Scopus CiteScore Quartiles with a mobile floating panel.
 // @match        https://www.scopus.com/sourceid/*

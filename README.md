@@ -11,7 +11,7 @@ Both outputs read only CiteScore information already visible on a Scopus Source 
 
 ## Install the desktop Chrome extension
 
-If you received `Scopus-CiteScore-Quartile-v2.0.0-desktop.zip`:
+If you received `Scopus-CiteScore-Quartile-v2.0.1-desktop.zip`:
 
 1. Right-click the ZIP and select **Extract All**. Chrome cannot load a ZIP directly.
 2. Open Chrome and enter `chrome://extensions` in the address bar.
@@ -31,7 +31,7 @@ For this local delivery:
 1. Open `dist/mobile/scopus-citescore-quartile.user.js` in your compatible userscript manager.
 2. Review its metadata and install it.
 3. Allow it to run only on `https://www.scopus.com/sourceid/*`.
-4. Open a Scopus Source Details page. A floating **Q/CiteScore** button appears after visible CiteScore Rank content is detected.
+4. Open a Scopus Source Details page. A floating **Q/CiteScore** button appears after visible CiteScore Rank content is detected. Its Q marker shows the installed version directly underneath.
 5. Activate the button to open the full-height category results drawer.
 
 The mobile target has no toolbar popup. Its drawer includes the results and an inline-badge setting. The enabled setting is stored through the same shared settings adapter, but a manager without its own script-management toggle may require disabling the userscript in that manager.
@@ -168,7 +168,7 @@ See [PRIVACY.md](PRIVACY.md) and [TEST-REPORT.md](TEST-REPORT.md).
 
 ## Testing disclosure
 
-**Version 2.0.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in installed Chrome against realistic local fixtures, including delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the desktop MV3 load, and the mobile userscript UI.
+**Version 2.0.1 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in installed Chrome against realistic local fixtures, including delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the desktop MV3 load, and the mobile userscript UI.
 
 The GitHub workflow is provided and locally inspected, but it has not been executed on GitHub because this folder is not connected to a GitHub repository. Mobile device-manager installation was not claimed as tested.
 

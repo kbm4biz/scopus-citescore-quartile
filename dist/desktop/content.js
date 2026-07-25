@@ -474,7 +474,7 @@
 	}
 	//#endregion
 	//#region src/app/scopus-app.js
-	function initialiseScopusApp({ settingsStore, mode = "desktop", clipboardWriter = null }) {
+	function initialiseScopusApp({ settingsStore, mode = "desktop", clipboardWriter = null, version = "" }) {
 		const globalScope = window;
 		const loadedKey = mode === "mobile" ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
 		if (globalScope[loadedKey]) return globalScope[loadedKey];
@@ -689,8 +689,9 @@
 			fab.type = "button";
 			fab.setAttribute("aria-controls", MOBILE_DRAWER_ID);
 			fab.setAttribute("aria-expanded", String(mobileDrawerOpen));
-			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.`);
-			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`, best || "Q?");
+			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.${version ? ` Version ${version}.` : ""}`);
+			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`);
+			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best || "Q?"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
 			fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
 			const backdrop = createElement("button", "scsq-mobile-backdrop");
 			backdrop.type = "button";

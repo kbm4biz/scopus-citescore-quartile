@@ -7,10 +7,12 @@ import { fileURLToPath } from "node:url";
 const testsDirectory = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(testsDirectory, "..");
 const extensionRoot = path.join(projectRoot, "dist", "desktop");
+const packageJson = JSON.parse(fs.readFileSync(path.join(projectRoot, "package.json"), "utf8"));
 const manifest = JSON.parse(fs.readFileSync(path.join(extensionRoot, "manifest.json"), "utf8"));
 
 test("manifest is MV3 with only the intended permission and Scopus source-page access", () => {
   assert.equal(manifest.manifest_version, 3);
+  assert.equal(manifest.version, packageJson.version);
   assert.deepEqual(manifest.permissions, ["storage"]);
   assert.deepEqual(manifest.host_permissions, ["https://www.scopus.com/sourceid/*"]);
   assert.deepEqual(manifest.content_scripts[0].matches, ["https://www.scopus.com/sourceid/*"]);
@@ -42,7 +44,7 @@ test("mobile userscript is self-contained and has the required metadata", () => 
     path.join(projectRoot, "dist", "mobile", "scopus-citescore-quartile.user.js"),
     "utf8"
   );
-  assert.match(userscript, /@version\s+2\.0\.0/);
+  assert.match(userscript, new RegExp(`@version\\s+${packageJson.version.replaceAll(".", "\\.")}`));
   assert.match(userscript, /@match\s+https:\/\/www\.scopus\.com\/sourceid\/\*/);
   assert.match(userscript, /@run-at\s+document-idle/);
   assert.match(userscript, /@grant\s+GM_getValue/);

@@ -1,6 +1,6 @@
 # Test Report
 
-Build: Scopus CiteScore Quartile 2.0.0  
+Build: Scopus CiteScore Quartile 2.0.1  
 Validation date: 25 July 2026  
 Local platform: Windows, Node.js 24.14.0, Google Chrome 150.0.7871.181
 
@@ -26,17 +26,18 @@ Coverage includes:
 9. Hidden unrelated numbers being excluded.
 10. Slight wording/layout and accessible-name variations.
 11. `chrome.storage`, GM storage, and local fallback selection.
-12. Mobile floating action button, open full-height drawer, and inline badges.
+12. Mobile floating action button with its installed-version label, open full-height drawer, and inline badges.
 
 ## Visual fixture inspection
 
-Seven screenshots were generated in `tests/screenshots/`:
+Eight screenshots were generated in `tests/screenshots/`:
 
 - `one-category.png`
 - `multiple-categories.png`
 - `delayed-content.png`
 - `rank-only.png`
 - `layout-variation.png`
+- `mobile-floating-button.png`
 - `mobile-multiple-categories.png`
 - `mobile-delayed-content.png`
 
@@ -50,6 +51,6 @@ The GitHub Actions file was checked as part of the source delivery but was not e
 
 ## Live-site and device disclosure
 
-No authenticated Scopus session was available. Version 2.0.0 was **not** verified on a logged-in live Scopus Source Details page. It was validated only against the realistic local fixtures described above.
+No authenticated Scopus session was available. Version 2.0.1 was **not** verified on a logged-in live Scopus Source Details page. It was validated only against the realistic local fixtures described above.
 
 No claim is made that this build was installed in every mobile userscript manager. Manager/device compatibility must be confirmed on the user's chosen Android or iOS setup.

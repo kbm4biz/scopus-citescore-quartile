@@ -7,6 +7,7 @@ import {
   GM_setClipboard,
   GM_setValue
 } from "$";
+import packageJson from "../../package.json";
 import "../ui/page.css";
 import { initialiseScopusApp } from "../app/scopus-app.js";
 import { createSettingsStore } from "../platform/settings-store.js";
@@ -31,5 +32,6 @@ const clipboardWriter = typeof GM_setClipboard === "function"
 initialiseScopusApp({
   mode: "mobile",
   settingsStore: createSettingsStore({ chromeApi: null, gmApi }),
-  clipboardWriter
+  clipboardWriter,
+  version: packageJson.version
 });
