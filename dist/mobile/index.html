@@ -1,24 +1,304 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scopus CiteScore Quartile userscript</title>
+  <meta name="description" content="Install Scopus CiteScore Quartile on iPhone or Android.">
+  <title>Scopus CiteScore Quartile 2.0.1</title>
   <style>
-    :root { color-scheme: light; font-family: system-ui, sans-serif; }
-    body { margin: 0; color: #17313a; background: #eef4f5; }
-    main { width: min(42rem, calc(100% - 2rem)); margin: 3rem auto; padding: 1.5rem; background: white; border: 1px solid #bfd1d7; border-radius: 12px; box-shadow: 0 6px 24px #17313a1f; }
-    h1 { margin-top: 0; color: #0f5663; }
-    a { display: inline-block; padding: .75rem 1rem; color: white; background: #006b73; border-radius: 8px; font-weight: 700; }
-    .note { margin-top: 1.2rem; padding: .8rem; background: #fff7d6; border-inline-start: 4px solid #8a6200; }
+    :root {
+      color-scheme: light;
+      --ink: #17313a;
+      --muted: #4c626a;
+      --brand: #006b73;
+      --brand-dark: #004f56;
+      --line: #bfd1d7;
+      --surface: #ffffff;
+      --page: #eef4f5;
+      --note: #fff7d6;
+      --note-line: #8a6200;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(46rem, calc(100% - 1.5rem));
+      margin-block: 1.5rem;
+      margin-inline: auto;
+      padding: clamp(1rem, 4vw, 2rem);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 7px 26px rgba(23, 49, 58, 0.12);
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-block-end: 1.35rem;
+    }
+
+    .version {
+      margin: 0;
+      color: var(--brand-dark);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .language-switch {
+      display: inline-flex;
+      padding: 0.2rem;
+      background: #e7f0f2;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+    }
+
+    .language-switch button {
+      min-block-size: 2.35rem;
+      padding-block: 0.45rem;
+      padding-inline: 0.75rem;
+      color: var(--brand-dark);
+      background: transparent;
+      border: 0;
+      border-radius: 7px;
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .language-switch button[aria-pressed="true"] {
+      color: #ffffff;
+      background: var(--brand);
+    }
+
+    h1 {
+      margin-block: 0 0.55rem;
+      margin-inline: 0;
+      color: #0f5663;
+      font-size: clamp(1.7rem, 6vw, 2.35rem);
+      line-height: 1.2;
+    }
+
+    .intro {
+      margin-block: 0 1.25rem;
+      margin-inline: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .install-button {
+      display: block;
+      width: 100%;
+      margin-block: 0 1.3rem;
+      padding-block: 0.85rem;
+      padding-inline: 1rem;
+      color: #ffffff;
+      background: var(--brand);
+      border: 2px solid var(--brand);
+      border-radius: 9px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .install-button:hover {
+      background: var(--brand-dark);
+      border-color: var(--brand-dark);
+    }
+
+    .device-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+    }
+
+    .device-card {
+      padding: 1rem;
+      background: #f5f9fa;
+      border: 1px solid #cfdee2;
+      border-radius: 10px;
+    }
+
+    .device-card h2 {
+      margin-block: 0 0.35rem;
+      margin-inline: 0;
+      color: #184f5b;
+      font-size: 1.05rem;
+    }
+
+    .device-card p,
+    .update-note,
+    .share,
+    .terminology {
+      margin-block: 0;
+      margin-inline: 0;
+    }
+
+    .update-note,
+    .share,
+    .terminology {
+      margin-block-start: 1rem;
+      padding: 0.85rem;
+      border-radius: 8px;
+    }
+
+    .update-note {
+      color: #184c35;
+      background: #e9f7ef;
+      border-inline-start: 4px solid #167447;
+    }
+
+    .share {
+      color: #314950;
+      background: #edf3f4;
+    }
+
+    .share code {
+      display: block;
+      margin-block-start: 0.35rem;
+      overflow-wrap: anywhere;
+      unicode-bidi: plaintext;
+      font-family: ui-monospace, "Cascadia Code", monospace;
+      font-size: 0.82rem;
+    }
+
+    .terminology {
+      color: #514500;
+      background: var(--note);
+      border-inline-start: 4px solid var(--note-line);
+    }
+
+    .source-link {
+      display: inline-block;
+      margin-block-start: 1rem;
+      color: var(--brand-dark);
+      font-weight: 750;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #111111;
+      outline-offset: 3px;
+    }
+
+    [hidden] { display: none !important; }
+    bdi { unicode-bidi: isolate; }
+
+    @media (max-width: 560px) {
+      main { margin-block: 0.75rem; }
+      .device-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <main>
-    <h1>Scopus CiteScore Quartile 2.0.1</h1>
-    <p>Install or update the mobile userscript with a compatible userscript manager.</p>
-    <p><a href="./scopus-citescore-quartile.user.js">Install mobile userscript</a></p>
-    <p class="note">This calculates category-specific CiteScore quartiles. It is not a JCR or SCImago/SJR quartile.</p>
+    <div class="topbar">
+      <p class="version">Scopus CiteScore Quartile · v2.0.1</p>
+      <div class="language-switch" role="group" aria-label="Language / اللغة">
+        <button type="button" data-language-button="en" aria-pressed="true">English</button>
+        <button type="button" data-language-button="ar" aria-pressed="false" lang="ar">العربية</button>
+      </div>
+    </div>
+
+    <section data-language-panel="en">
+      <h1>Install on mobile</h1>
+      <p class="intro">One userscript for iPhone and Android.</p>
+      <a class="install-button" href="./scopus-citescore-quartile.user.js">Install mobile userscript</a>
+
+      <div class="device-grid">
+        <article class="device-card">
+          <h2>iPhone</h2>
+          <p>Use Safari with Tampermonkey. Open this page in Safari, then tap the install button.</p>
+        </article>
+        <article class="device-card">
+          <h2>Android</h2>
+          <p>Use Firefox or Edge with Tampermonkey. Open this page there, then tap the install button.</p>
+        </article>
+      </div>
+
+      <p class="update-note"><strong>Automatic updates:</strong> install once. Your userscript manager checks for newer versions. The installed version appears below the floating Q.</p>
+      <p class="share"><strong>Share this installation page:</strong><code>https://kbm4biz.github.io/scopus-citescore-quartile/</code></p>
+      <p class="terminology">This is a category-specific Scopus CiteScore Quartile. It is not a JCR or SCImago/SJR quartile.</p>
+      <a class="source-link" href="https://github.com/kbm4biz/scopus-citescore-quartile">View source on GitHub</a>
+    </section>
+
+    <section data-language-panel="ar" lang="ar" dir="rtl" hidden>
+      <h1>التثبيت على الجوال</h1>
+      <p class="intro">سكربت واحد لهواتف آيفون وأندرويد.</p>
+      <a class="install-button" href="./scopus-citescore-quartile.user.js">تثبيت سكربت الجوال</a>
+
+      <div class="device-grid">
+        <article class="device-card">
+          <h2>آيفون</h2>
+          <p>استخدم <bdi dir="ltr">Safari</bdi> وثبّت إضافة <bdi dir="ltr">Tampermonkey</bdi>، ثم افتح هذه الصفحة واضغط زر التثبيت</p>
+        </article>
+        <article class="device-card">
+          <h2>أندرويد</h2>
+          <p>استخدم <bdi dir="ltr">Firefox</bdi> أو <bdi dir="ltr">Edge</bdi> وثبّت إضافة <bdi dir="ltr">Tampermonkey</bdi>، ثم افتح هذه الصفحة واضغط زر التثبيت</p>
+        </article>
+      </div>
+
+      <p class="update-note"><strong>التحديث التلقائي:</strong> ثبّته مرة واحدة، وسيتحقق مدير السكربتات من الإصدارات الجديدة. يظهر الإصدار المثبّت أسفل شارة <bdi dir="ltr">Q</bdi> العائمة.</p>
+      <p class="share"><strong>شارك صفحة التثبيت:</strong><code>https://kbm4biz.github.io/scopus-citescore-quartile/</code></p>
+      <p class="terminology">هذا رُبع <bdi dir="ltr">CiteScore</bdi> خاص بكل تصنيف موضوعي في <bdi dir="ltr">Scopus</bdi>، وليس رُبع <bdi dir="ltr">JCR</bdi> أو <bdi dir="ltr">SCImago/SJR</bdi></p>
+      <a class="source-link" href="https://github.com/kbm4biz/scopus-citescore-quartile">عرض المصدر على <bdi dir="ltr">GitHub</bdi></a>
+    </section>
   </main>
+
+  <script>
+    (function initialiseLanguage() {
+      "use strict";
+      var storageKey = "scsq-client-language";
+      var buttons = Array.from(document.querySelectorAll("[data-language-button]"));
+      var panels = Array.from(document.querySelectorAll("[data-language-panel]"));
+
+      function applyLanguage(language) {
+        var selected = language === "ar" ? "ar" : "en";
+        document.documentElement.lang = selected;
+        document.documentElement.dir = selected === "ar" ? "rtl" : "ltr";
+        buttons.forEach(function updateButton(button) {
+          button.setAttribute("aria-pressed", String(button.dataset.languageButton === selected));
+        });
+        panels.forEach(function updatePanel(panel) {
+          panel.hidden = panel.dataset.languagePanel !== selected;
+        });
+        try {
+          localStorage.setItem(storageKey, selected);
+        } catch (_error) {
+          // Language selection still works when storage is unavailable.
+        }
+      }
+
+      var queryLanguage = new URLSearchParams(location.search).get("lang");
+      var savedLanguage = null;
+      try {
+        savedLanguage = localStorage.getItem(storageKey);
+      } catch (_error) {
+        // Use query or browser language when storage is unavailable.
+      }
+      var browserLanguage = String(navigator.language || "").toLowerCase().startsWith("ar") ? "ar" : "en";
+      applyLanguage(queryLanguage || savedLanguage || browserLanguage);
+
+      buttons.forEach(function bindButton(button) {
+        button.addEventListener("click", function changeLanguage() {
+          applyLanguage(button.dataset.languageButton);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

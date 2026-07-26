@@ -7,8 +7,8 @@ Local platform: Windows, Node.js 24.14.0, Google Chrome 150.0.7871.181
 ## Automated results
 
 - Vite desktop and userscript production builds: **passed**.
-- Node calculator/parser/manifest/settings tests: **19 passed, 0 failed**.
-- Desktop/mobile headless-Chrome fixture scenarios: **7 passed, 0 failed**.
+- Node calculator/parser/manifest/settings/client-page tests: **21 passed, 0 failed**.
+- Desktop/mobile/client-page headless-Chrome scenarios: **9 passed, 0 failed**.
 - Manifest V3 unpacked-extension load smoke: **passed**.
 - Referenced-file and no-remote-script checks: **passed**.
 - Userscript metadata, grant, match, self-contained, and no-`@require` checks: **passed**.
@@ -30,7 +30,7 @@ Coverage includes:
 
 ## Visual fixture inspection
 
-Eight screenshots were generated in `tests/screenshots/`:
+Ten screenshots were generated in `tests/screenshots/`:
 
 - `one-category.png`
 - `multiple-categories.png`
@@ -40,8 +40,10 @@ Eight screenshots were generated in `tests/screenshots/`:
 - `mobile-floating-button.png`
 - `mobile-multiple-categories.png`
 - `mobile-delayed-content.png`
+- `client-install-en.png`
+- `client-install-ar.png`
 
-Desktop inspection confirmed a readable category table, distinct Q colours, visible estimation labels, the best summary, information note, and no duplicate UI. Mobile inspection covered the full-height drawer, category cards at narrow width, floating control, safe scrolling, and delayed data.
+Desktop inspection confirmed a readable category table, distinct Q colours, visible estimation labels, the best summary, information note, and no duplicate UI. Mobile inspection covered the full-height drawer, category cards at narrow width, floating control, safe scrolling, and delayed data. Client-page inspection confirmed matching English and Arabic installation paths, responsive cards, and true RTL layout.
 
 ## Deployment checks
 

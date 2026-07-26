@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "description": "One Vite codebase that builds a Manifest V3 Chrome extension and a mobile userscript.",
+  "homepage": "https://kbm4biz.github.io/scopus-citescore-quartile/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kbm4biz/scopus-citescore-quartile"
+  },
   "packageManager": "pnpm@11.9.0",
   "engines": {
     "node": ">=20.19.0"

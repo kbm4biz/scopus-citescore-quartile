@@ -4,6 +4,9 @@
 // @version      2.0.1
 // @author       Local build
 // @description  Shows category-specific Scopus CiteScore Quartiles with a mobile floating panel.
+// @homepage     https://kbm4biz.github.io/scopus-citescore-quartile/
+// @homepageURL  https://kbm4biz.github.io/scopus-citescore-quartile/
+// @source       https://github.com/kbm4biz/scopus-citescore-quartile
 // @match        https://www.scopus.com/sourceid/*
 // @grant        GM_addStyle
 // @grant        GM_addValueChangeListener

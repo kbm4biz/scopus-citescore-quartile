@@ -121,6 +121,8 @@ The included `.github/workflows/build-and-publish.yml` workflow:
 4. uploads the unpacked desktop build as a workflow artifact; and
 5. publishes `dist/mobile` with GitHub Pages.
 
+The published client page provides the same short installation instructions in English and Arabic, switches the complete document between LTR and RTL, and links both languages to the same userscript.
+
 To activate it:
 
 1. Create an empty GitHub repository.

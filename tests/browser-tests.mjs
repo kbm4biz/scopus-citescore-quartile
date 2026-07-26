@@ -233,6 +233,24 @@ try {
   assert.match(mobileDelayed, /Computer Science Applications/);
   assert.match(mobileDelayed, /scsq-badge--q1/);
 
+  const clientEnglish = await renderFixture(
+    chromePath,
+    baseUrl,
+    "../../dist/mobile/index.html?lang=en",
+    900
+  );
+  assert.match(clientEnglish, /<html lang="en" dir="ltr">/);
+  assert.match(clientEnglish, /Install mobile userscript/);
+
+  const clientArabic = await renderFixture(
+    chromePath,
+    baseUrl,
+    "../../dist/mobile/index.html?lang=ar",
+    900
+  );
+  assert.match(clientArabic, /<html lang="ar" dir="rtl">/);
+  assert.match(clientArabic, /تثبيت سكربت الجوال/);
+
   const fixtureNames = [
     "one-category.html",
     "multiple-categories.html",
@@ -267,10 +285,26 @@ try {
     "mobile-delayed-content.png",
     "500,900"
   );
+  await captureFixture(
+    chromePath,
+    baseUrl,
+    "../../dist/mobile/index.html?lang=en",
+    900,
+    "client-install-en.png",
+    "900,1100"
+  );
+  await captureFixture(
+    chromePath,
+    baseUrl,
+    "../../dist/mobile/index.html?lang=ar",
+    900,
+    "client-install-ar.png",
+    "900,1100"
+  );
 
-  console.log("Browser fixture tests: 7/7 passed in headless Chromium.");
+  console.log("Browser fixture tests: 9/9 passed in headless Chromium.");
   console.log("Manifest V3 unpacked-extension load smoke: passed.");
-  console.log("Fixture screenshots: 8 written to tests/screenshots for visual QA.");
+  console.log("Fixture screenshots: 10 written to tests/screenshots for visual QA.");
   console.log(`Browser used: ${chromePath}`);
 } finally {
   await new Promise((resolve) => server.close(resolve));

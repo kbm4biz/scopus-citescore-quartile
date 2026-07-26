@@ -34,6 +34,8 @@ The desktop build uses `chrome.storage.sync`. Chrome may synchronize these Boole
 
 The userscript build uses the manager's `GM_getValue` and `GM_setValue`. A limited `localStorage` fallback is available when the GM storage API is missing. No journal title, category, percentile, rank, CiteScore, or copied result is stored in these settings.
 
+The GitHub Pages installation page may store one local language preference (`en` or `ar`) in the visitor's browser so it can reopen in the chosen language. This preference remains in that browser and contains no Scopus or personal data.
+
 ## Automatic userscript update checks
 
 A userscript built and published by the included GitHub Actions workflow contains `@updateURL` and `@downloadURL` links to the owner's GitHub Pages site. The user's userscript manager may contact those URLs to compare versions or download an update. That request is controlled by the manager and GitHub Pages; the script itself does not transmit Scopus page data with it.
