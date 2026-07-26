@@ -11,7 +11,8 @@ export function initialiseScopusApp({
   version = ""
 }) {
   const globalScope = window;
-  const loadedKey = mode === "mobile" ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
+  const isUserscript = mode === "userscript" || mode === "mobile";
+  const loadedKey = isUserscript ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
   if (globalScope[loadedKey]) {
     return globalScope[loadedKey];
   }
@@ -418,7 +419,7 @@ export function initialiseScopusApp({
 
   function signatureFor(data, calculatedCategories) {
     return JSON.stringify({
-      mode,
+      mode: isUserscript ? "userscript" : "desktop",
       settings,
       title: data.title,
       year: data.year,
@@ -435,7 +436,7 @@ export function initialiseScopusApp({
 
   function uiIsHealthy(calculatedCategories) {
     const panelCount = document.querySelectorAll(`[data-scsq-panel='true']`).length;
-    const expectedPanelCount = mode === "mobile" ? 1 : (settings.showPanel ? 1 : 0);
+    const expectedPanelCount = isUserscript ? 1 : (settings.showPanel ? 1 : 0);
     if (panelCount !== expectedPanelCount) {
       return false;
     }
@@ -476,7 +477,7 @@ export function initialiseScopusApp({
 
       removePanels();
       removeInlineBadges();
-      if (mode === "mobile") {
+      if (isUserscript) {
         insertMobileLayer(buildMobileLayer(data, calculatedCategories));
       } else if (settings.showPanel) {
         insertPanel(buildPanel(data, calculatedCategories), data.anchor);
@@ -524,7 +525,7 @@ export function initialiseScopusApp({
     document.addEventListener("change", scheduleUpdate, true);
     document.addEventListener("click", scheduleUpdate, true);
     document.addEventListener("keydown", (event) => {
-      if (mode === "mobile" && event.key === "Escape" && mobileDrawerOpen) {
+      if (isUserscript && event.key === "Escape" && mobileDrawerOpen) {
         setMobileDrawerOpen(false);
       }
     }, true);

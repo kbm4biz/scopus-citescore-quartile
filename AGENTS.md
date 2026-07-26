@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-Use these rules for browser-based client projects that should ship from one maintained codebase to desktop browsers and mobile userscript managers. Copy this file into a new project root and replace project-specific names, match URLs, terminology, permissions, and GitHub links.
+Use these rules for browser-based client projects that should ship from one maintained codebase across supported desktop and mobile browsers. Copy this file into a new project root and replace project-specific names, match URLs, terminology, permissions, and GitHub links.
 
 Current reference implementation:
 
@@ -20,9 +20,10 @@ For another project, replace those values with:
 ## Non-negotiable delivery model
 
 - Maintain one source tree for domain logic, extraction, state, and shared UI.
-- Build a Chrome Manifest V3 desktop extension and a standards-based `.user.js` mobile target from that source tree.
+- Make one standards-based Tampermonkey `.user.js` the primary client product on supported desktop and mobile browsers.
+- Build a Chrome Manifest V3 desktop extension from the same source tree only as a secondary fallback for clients who cannot install a userscript manager.
 - Keep the project web-platform based: semantic HTML, modern CSS, and vanilla JavaScript unless a dependency is genuinely necessary.
-- Do not create separate Android and iPhone codebases. Both mobile platforms install the same userscript.
+- Do not create separate desktop, Android, and iPhone userscripts. Every supported platform installs the same `.user.js` URL.
 - Do not introduce a native app, proprietary wrapper, framework, remote library, analytics service, or broad permission unless the user explicitly requires it and the tradeoff is documented.
 - Bundle runtime code locally. A userscript `@require` is allowed only when a real feature needs it, the URL/version is pinned, the privacy impact is disclosed, and a local alternative was considered.
 - Preserve the project's exact domain terminology. Never substitute a superficially similar metric, ranking, category, or standard.
@@ -36,12 +37,12 @@ src/core/                    Pure calculation and validation
 src/app/                     Shared page behavior and UI construction
 src/platform/                Storage and platform adapters
 src/entry/desktop.js         Desktop content-script entry
-src/entry/mobile.js          Mobile userscript entry
+src/entry/userscript.js      Universal desktop/mobile userscript entry
 src/popup/                   Desktop-only popup
 src/ui/                      Shared logical-property CSS
 scripts/                     Build finishing and client-page generation
 dist/desktop/                Installable unpacked MV3 extension
-dist/mobile/                 Installable and hostable userscript site
+dist/mobile/                 Backward-compatible hosted userscript site
 tests/                       Unit, browser, fixture, and visual tests
 .github/workflows/           Build, test, artifact, and Pages deployment
 ```
@@ -52,11 +53,13 @@ tests/                       Unit, browser, fixture, and visual tests
 - Mark and remove owned UI so repeated mutations cannot create duplicate panels or badges.
 - Sanitize page-derived text and insert it with `textContent`, never as trusted HTML.
 
-## Desktop and mobile interface rules
+## Universal userscript interface rules
 
-- Desktop may use a toolbar popup and an in-page panel.
-- Mobile must avoid dependence on a browser toolbar popup. Use a reachable floating action button and a full-height responsive drawer.
-- Show the installed version unobtrusively in the mobile floating control so support staff can identify a client's release.
+- The primary userscript must use one responsive floating action button and full-height drawer on both desktop and mobile.
+- Do not depend on a toolbar popup for the primary product.
+- Show the installed version unobtrusively in the floating control so support staff can identify a client's release.
+- Put essential user controls inside the drawer or the userscript manager. Do not maintain a separate settings UI for each platform.
+- The fallback MV3 extension may retain a toolbar popup and desktop panel, but it must not become a second independent product.
 - Use accessible contrast, visible focus states, keyboard controls where available, ARIA names, reduced-motion support, safe-area insets, and responsive sizing.
 - Use CSS logical properties (`inline`, `block`, `margin-inline`, `border-inline-start`) so the same styles work in left-to-right and right-to-left layouts.
 - Never hide or rewrite the website's original metrics or content.
@@ -72,22 +75,29 @@ Every distributed project must publish a simple GitHub Pages installation page i
 - Include only:
   - project name and current version;
   - one primary userscript installation button;
-  - short iPhone/Safari and Android/Firefox-or-Edge instructions;
+  - a short platform selector for desktop Chrome/Edge, desktop Firefox, iPhone/Safari, and Android/Firefox-or-Edge;
+  - the official userscript-manager installation link and only the platform-specific steps that matter;
+  - the Chrome/Edge `Allow User Scripts` requirement when applicable;
+  - a warning to disable the older MV3 extension before enabling the userscript;
   - a one-sentence automatic-update explanation;
   - the shareable GitHub Pages URL;
   - a concise privacy/terminology note; and
-  - a source-repository link when public.
+  - a collapsed alternative-extension link for clients whose organization blocks userscript managers.
+- Detect the likely platform locally and highlight it, but always provide a manual selector and never transmit detection data.
 - Do not expose developer jargon, build commands, or long troubleshooting instructions on the client page.
 - Use no remote fonts, tracking, analytics, or remotely executed page scripts.
 
 ## GitHub publishing and automatic updates
 
 - Store the real repository and Pages URLs in `package.json`.
-- On every push to `main`, GitHub Actions must install locked dependencies, build both targets, run tests, upload the desktop artifact, and deploy `dist/mobile` to GitHub Pages.
+- On every push to `main`, GitHub Actions must install locked dependencies, build the primary userscript and fallback extension, run tests, upload the fallback artifact, and deploy `dist/mobile` to GitHub Pages.
+- Publish the fallback extension as a versioned GitHub Release asset, or provide an equally stable download location, so the collapsed alternative link is useful to non-technical clients.
 - Derive the hosted userscript base URL from the GitHub repository in CI.
 - The hosted userscript must contain correct `@version`, `@updateURL`, and `@downloadURL` values.
 - A local build must not contain a guessed or fake hosted update URL.
-- Increase the package/userscript version whenever executable userscript behavior changes. A client-page-only wording or layout change can retain the same userscript version.
+- Increase the package/userscript version whenever executable userscript behavior or the supported distribution model changes. A client-page-only wording or layout correction can retain the same userscript version.
+- Tell Chrome/Edge users that current Tampermonkey releases may require `Allow User Scripts`, and tell users to enable automatic installation if their manager separates checking from installation.
+- Existing extension users must disable or remove the fallback extension before running the userscript to prevent duplicate injected UI.
 - Never rename or delete the published repository after clients install from its update URL without providing a migration plan.
 - Never print, commit, or request personal access tokens, cookies, private keys, or browser credentials.
 
@@ -99,9 +109,10 @@ Before claiming completion:
 - Test parsing/extraction variants, delayed content, dynamic changes, and duplicate prevention.
 - Test desktop manifest permissions and every referenced file.
 - Test the storage adapter on Chrome, GM, and fallback paths.
-- Test the mobile userscript metadata and confirm displayed data takes precedence over estimates or fallbacks.
-- Test the client page in English and Arabic, including `lang`, RTL direction, identical install targets, current version, and absence of remote scripts.
-- Render and inspect representative desktop, narrow mobile, English client-page, and Arabic client-page screenshots.
+- Test the universal userscript metadata and confirm displayed data takes precedence over estimates or fallbacks.
+- Test the userscript UI at desktop and narrow-mobile viewport sizes.
+- Test the client page in English and Arabic, including `lang`, RTL direction, all supported platform selectors, identical install targets, current version, local platform detection, and absence of remote scripts.
+- Render and inspect representative desktop-userscript, narrow-mobile, English client-page, and Arabic client-page screenshots.
 - Load the desktop output in Chromium as an unpacked-extension smoke test.
 - After deployment, verify the live page, `.user.js`, `.meta.js`, version, update URL, and download URL.
 - State honestly whether authenticated live-site and physical iPhone/Android testing occurred.
@@ -112,7 +123,7 @@ Deliver and retain:
 
 - the source project;
 - `dist/desktop/`;
-- the hosted/mobile output;
+- the hosted universal-userscript output;
 - a desktop ZIP with `manifest.json` at its root;
 - a standalone `.user.js`;
 - a source ZIP without `.git`, `node_modules`, credentials, or private data;

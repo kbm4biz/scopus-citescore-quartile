@@ -1,49 +1,73 @@
 # Scopus CiteScore Quartile
 
-Version 2 is one vanilla JavaScript codebase with two installable outputs:
+Version 2.1.0 uses one vanilla JavaScript codebase to create:
 
-- `dist/desktop/` — a Chrome Manifest V3 extension with a toolbar popup.
-- `dist/mobile/scopus-citescore-quartile.user.js` — a userscript with a floating Q button and full-height results drawer.
+- one universal Tampermonkey userscript for supported desktop and mobile browsers; and
+- one Chrome Manifest V3 extension as a secondary desktop fallback.
 
 Both outputs read only CiteScore information already visible on a Scopus Source Details page. They show a separate **Scopus CiteScore Quartile** for every displayed subject category.
 
 > Every Q1–Q4 result produced here is a **Scopus CiteScore Quartile**. It is not a JCR, Web of Science, SCImago, or SJR quartile.
 
-## Install the desktop Chrome extension
+## Install the universal userscript
 
-If you received `Scopus-CiteScore-Quartile-v2.0.1-desktop.zip`:
+The simplest installation method for most clients is the bilingual live page:
 
-1. Right-click the ZIP and select **Extract All**. Chrome cannot load a ZIP directly.
-2. Open Chrome and enter `chrome://extensions` in the address bar.
-3. Turn on **Developer mode** in the upper-right corner.
-4. Select **Load unpacked**.
-5. Select the extracted folder that directly contains `manifest.json`.
-6. Confirm that **Scopus CiteScore Quartile** appears in the extension list.
+**[Open the English/Arabic installation page](https://kbm4biz.github.io/scopus-citescore-quartile/)**
 
-If you are using the source project, select `dist/desktop` at step 5. The toolbar popup lets you enable/disable the extension and independently show/hide the desktop panel or inline badges.
+It detects the likely platform locally and provides selectable instructions for:
 
-## Install the mobile userscript
+- desktop Chrome or Edge;
+- desktop Firefox;
+- iPhone or iPad Safari; and
+- Android Firefox or Edge.
 
-A normal mobile browser does not automatically load a desktop Chrome extension. Use a mobile browser or userscript app that supports `.user.js` files and the standard `GM_getValue`/`GM_setValue` APIs.
+All platforms install the same `scopus-citescore-quartile.user.js` file. The userscript uses a floating **Q / CiteScore** button instead of a browser-toolbar popup. Its installed version appears directly below the Q marker.
 
-For this local delivery:
+For desktop Chrome or Edge:
 
-1. Open `dist/mobile/scopus-citescore-quartile.user.js` in your compatible userscript manager.
-2. Review its metadata and install it.
-3. Allow it to run only on `https://www.scopus.com/sourceid/*`.
-4. Open a Scopus Source Details page. A floating **Q/CiteScore** button appears after visible CiteScore Rank content is detected. Its Q marker shows the installed version directly underneath.
-5. Activate the button to open the full-height category results drawer.
+1. Install Tampermonkey from its [official installation page](https://www.tampermonkey.net/?browser=chrome).
+2. If Tampermonkey asks for it, enable **Allow User Scripts** on the browser's extension-management page.
+3. Open the [live installation page](https://kbm4biz.github.io/scopus-citescore-quartile/) and select **Install userscript**.
+4. Review the script and confirm installation in Tampermonkey.
+5. Open a legitimate Scopus Source Details page such as `https://www.scopus.com/sourceid/21100893575`.
 
-The mobile target has no toolbar popup. Its drawer includes the results and an inline-badge setting. The enabled setting is stored through the same shared settings adapter, but a manager without its own script-management toggle may require disabling the userscript in that manager.
+If an older Scopus CiteScore Quartile Chrome extension is already active, disable or remove it before installing the userscript. Running both can create duplicate page controls.
 
-Compatibility depends on the mobile userscript manager. This build was browser-tested with a realistic GM API harness, not on every Android or iOS manager.
+The live page gives the equivalent short steps for Firefox, iPhone/iPad, and Android. Compatibility ultimately depends on the selected browser and userscript manager. This release was tested in Chrome with a realistic Tampermonkey/GM API harness; physical iPhone and Android installation was not claimed.
+
+### Automatic userscript updates
+
+Users do **not** reinstall the userscript from GitHub for every update:
+
+1. Tampermonkey periodically reads the hosted `.meta.js` file.
+2. It compares the installed `@version` with the published version.
+3. When a newer version exists, it downloads the same hosted `.user.js`.
+4. Tampermonkey installs it automatically when automatic installation is enabled; otherwise it asks the user to approve the update.
+
+The repository and GitHub Pages URL must remain available because installed copies use those exact update addresses.
+
+## Alternative desktop extension
+
+Use the Manifest V3 extension only when a client cannot install a userscript manager.
+
+1. Download the desktop ZIP from the [latest GitHub release](https://github.com/kbm4biz/scopus-citescore-quartile/releases/latest).
+2. Right-click the ZIP and select **Extract All**. Chrome cannot load a ZIP directly.
+3. Open `chrome://extensions`.
+4. Turn on **Developer mode**.
+5. Select **Load unpacked**.
+6. Select the extracted folder that directly contains `manifest.json`.
+
+The extension's toolbar popup controls whether the extension, desktop panel, and inline badges are shown. Because this fallback is not installed from the Chrome Web Store, it does not receive the userscript's automatic update. Replace the unpacked folder with a newer release when you want to update it.
+
+Do not enable the extension and userscript together.
 
 ## Use and interpret the results
 
-1. Open a legitimate Scopus Source Details page, such as `https://www.scopus.com/sourceid/21100893575`.
+1. Open a legitimate Scopus Source Details page.
 2. Sign in normally if Scopus requires it. This project does not bypass authentication, subscriptions, CAPTCHA, or access restrictions.
 3. Wait for **CiteScore rank** or **Rank & trend** to render.
-4. Review every subject-category row, not only the best summary.
+4. Activate the floating Q button, then review every subject-category row.
 5. Use **Copy results** to copy the source title, year/value, and all category-specific results.
 
 **Best CiteScore Quartile** means the best result among the subject categories currently displayed on the page. It is clearly labelled “Best” and is never presented as the journal's only quartile.
@@ -109,32 +133,39 @@ pnpm run test:browser
 pnpm test
 ```
 
-Vite builds the desktop and mobile targets separately. `vite-plugin-monkey` generates the userscript metadata, GM grants, embedded CSS, `.user.js`, and `.meta.js` files. No remote visualization or JavaScript library is loaded: Chart.js was intentionally omitted because this project has no chart feature.
+Vite builds the userscript and extension targets separately. `vite-plugin-monkey` generates the userscript metadata, GM grants, bundled CSS, `.user.js`, and `.meta.js` files. No remote JavaScript or visualization library is loaded.
 
-## GitHub automatic mobile updates
+## GitHub publishing and userscript updates
 
 The included `.github/workflows/build-and-publish.yml` workflow:
 
-1. runs on a push to `main` or a manual dispatch;
+1. runs on every push to `main` or a manual dispatch;
 2. installs the locked dependencies;
 3. builds and tests both targets;
-4. uploads the unpacked desktop build as a workflow artifact; and
-5. publishes `dist/mobile` with GitHub Pages.
+4. uploads the unpacked fallback extension as a workflow artifact;
+5. creates a versioned GitHub Release containing the fallback extension ZIP and universal userscript when that version is new; and
+6. publishes the universal userscript and bilingual client page through GitHub Pages.
 
-The published client page provides the same short installation instructions in English and Arabic, switches the complete document between LTR and RTL, and links both languages to the same userscript.
+The GitHub Actions build derives the real Pages URL and writes it into `@updateURL` and `@downloadURL`. A local build intentionally omits those hosted URLs; it must never guess them.
 
-To activate it:
+For a new repository:
 
-1. Create an empty GitHub repository.
-2. Commit this project and push it to the repository's `main` branch.
-3. On GitHub, open **Settings → Pages**.
-4. Under **Build and deployment**, choose **GitHub Actions** as the source.
-5. Open the repository's **Actions** tab and confirm the workflow succeeds.
-6. Visit `https://YOUR-USER.github.io/YOUR-REPOSITORY/` and install the linked userscript.
+1. Create a GitHub repository and push this project to its `main` branch.
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, choose **GitHub Actions**.
+4. Confirm the workflow succeeds in the repository's **Actions** tab.
+5. Open `https://YOUR-USER.github.io/YOUR-REPOSITORY/`.
+6. Install the userscript from that page.
 
-In GitHub Actions the build derives that Pages URL and writes it into `@updateURL` and `@downloadURL`. A compatible userscript manager can then check the small `.meta.js` file and install a newer `.user.js` when `package.json` has a higher `version`.
+For later updates:
 
-The local build intentionally omits update URLs because this workspace has no Git remote and therefore no verified public Pages address. Do not add a guessed URL. After changing code, increment the version in `package.json`, commit, and push.
+1. change the code;
+2. increase `version` in `package.json` when the userscript behavior changes;
+3. run `pnpm test`;
+4. commit and push to `main`; and
+5. confirm the GitHub Actions workflow and live page show the new version.
+
+Installed userscripts then receive the newer version through their manager's update checker. The workflow also publishes the new fallback extension ZIP automatically when the version number is new.
 
 ## Shared architecture
 
@@ -143,16 +174,16 @@ src/core/                    Pure calculator and semantic Scopus parser
 src/app/scopus-app.js        Shared observer, extraction flow, and result UI
 src/platform/settings-store.js
                              chrome.storage / GM_* / localStorage adapter
-src/entry/desktop.js         Desktop content-script entry
-src/entry/mobile.js          Mobile userscript entry
-src/popup/                   Desktop popup
-src/ui/page.css              Desktop panel, inline badges, FAB, mobile drawer
-vite.desktop.config.js       MV3 content build
-vite.mobile.config.js        Userscript build and metadata
-scripts/                     Manifest, popup, icon, and Pages-output finishing
-.github/workflows/           Build, test, artifact, and GitHub Pages publishing
-dist/desktop/                Installable unpacked desktop output
-dist/mobile/                 Installable/hostable mobile output
+src/entry/desktop.js         Fallback extension content-script entry
+src/entry/userscript.js      Universal desktop/mobile userscript entry
+src/popup/                   Fallback extension popup
+src/ui/page.css              Panel, inline badges, responsive FAB, and drawer
+vite.desktop.config.js       MV3 extension build
+vite.mobile.config.js        Universal userscript build and metadata
+scripts/                     Build finishing and Pages-output generation
+.github/workflows/           Build, test, artifact, and Pages deployment
+dist/desktop/                Installable unpacked fallback extension
+dist/mobile/                 Hosted client page and universal userscript
 tests/                       Unit tests, browser tests, fixtures, screenshots
 ```
 
@@ -164,15 +195,15 @@ The app uses a debounced `MutationObserver`, rechecks after user interactions, a
 
 Page-derived text is normalized and inserted with `textContent`; it is never treated as HTML. Owned panel/badge markers prevent duplicate injection. The app does not modify or hide Scopus's original metrics.
 
-The desktop manifest requests only `storage` and access to `https://www.scopus.com/sourceid/*`. The userscript has the same URL match and requests only the GM functions needed for styles, preferences, change listeners, and user-triggered clipboard copying.
+The extension manifest requests only `storage` and access to `https://www.scopus.com/sourceid/*`. The userscript has the same URL match and requests only the GM functions needed for styles, preferences, change listeners, and user-triggered clipboard copying.
 
 See [PRIVACY.md](PRIVACY.md) and [TEST-REPORT.md](TEST-REPORT.md).
 
 ## Testing disclosure
 
-**Version 2.0.1 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in installed Chrome against realistic local fixtures, including delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the desktop MV3 load, and the mobile userscript UI.
+**Version 2.1.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in Chrome against realistic local fixtures, including delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the fallback MV3 load, desktop/narrow userscript UI, and the bilingual platform-specific client page.
 
-The GitHub workflow is provided and locally inspected, but it has not been executed on GitHub because this folder is not connected to a GitHub repository. Mobile device-manager installation was not claimed as tested.
+The GitHub workflow and live Pages files were also verified after publishing. Physical iPhone/Android installation and every possible userscript manager were not tested.
 
 ## Official Scopus references
 

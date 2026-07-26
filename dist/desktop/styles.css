@@ -503,7 +503,8 @@
   }
 
   .scsq-mobile-drawer {
-    inline-size: 100vw;
+    inset-inline-start: 0;
+    inline-size: auto;
   }
 
   .scsq-panel--mobile .scsq-table-wrap {

@@ -1,10 +1,10 @@
 (function loadCompiledRuntime() {
   "use strict";
   const parameters = new URLSearchParams(location.search);
-  const mobile = parameters.get("mode") === "mobile";
-  const shouldOpenMobilePanel = mobile && parameters.get("open") === "1";
+  const userscript = ["userscript", "mobile"].includes(parameters.get("mode"));
+  const shouldOpenUserscriptPanel = userscript && parameters.get("open") === "1";
 
-  function openMobilePanelWhenReady() {
+  function openUserscriptPanelWhenReady() {
     const api = window.__SCSQ_MOBILE_LOADED__;
     const layer = document.getElementById("scsq-mobile-layer");
     if (!layer || !api || typeof api.openMobilePanel !== "function") {
@@ -15,16 +15,16 @@
   }
 
   let openObserver = null;
-  if (shouldOpenMobilePanel) {
+  if (shouldOpenUserscriptPanel) {
     openObserver = new MutationObserver(() => {
-      if (openMobilePanelWhenReady()) {
+      if (openUserscriptPanelWhenReady()) {
         openObserver.disconnect();
       }
     });
     openObserver.observe(document.documentElement, { childList: true, subtree: true });
   }
 
-  if (!mobile) {
+  if (!userscript) {
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
     stylesheet.href = "../../dist/desktop/styles.css";
@@ -33,11 +33,11 @@
 
   const script = document.createElement("script");
   script.async = false;
-  script.src = mobile
+  script.src = userscript
     ? "../../dist/mobile/scopus-citescore-quartile.user.js"
     : "../../dist/desktop/content.js";
   script.addEventListener("load", () => {
-    if (!shouldOpenMobilePanel || openMobilePanelWhenReady()) {
+    if (!shouldOpenUserscriptPanel || openUserscriptPanelWhenReady()) {
       openObserver?.disconnect();
       return;
     }

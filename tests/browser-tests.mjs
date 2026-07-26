@@ -201,55 +201,58 @@ try {
   assert.match(variation, /Information Systems[\s\S]*?Q3/);
   assert.doesNotMatch(variation, /scsq-table__category[^>]*>Hidden Numbers/);
 
-  const mobile = await renderFixture(
+  const userscript = await renderFixture(
     chromePath,
     baseUrl,
-    "multiple-categories.html?mode=mobile&open=1",
+    "multiple-categories.html?mode=userscript&open=1",
     2200
   );
-  assert.equal(count(mobile, 'id="scsq-mobile-layer"'), 1, "mobile fixture should have exactly one UI layer");
-  assert.equal(count(mobile, 'class="scsq-mobile-fab"'), 1, "mobile fixture should have exactly one floating action button");
-  assert.equal(count(mobile, 'id="scsq-mobile-drawer"'), 1, "mobile fixture should have exactly one drawer");
-  assert.match(mobile, /scsq-mobile-drawer is-open/);
+  assert.equal(count(userscript, 'id="scsq-mobile-layer"'), 1, "userscript fixture should have exactly one UI layer");
+  assert.equal(count(userscript, 'class="scsq-mobile-fab"'), 1, "userscript fixture should have exactly one floating action button");
+  assert.equal(count(userscript, 'id="scsq-mobile-drawer"'), 1, "userscript fixture should have exactly one drawer");
+  assert.match(userscript, /scsq-mobile-drawer is-open/);
   assert.match(
-    mobile,
+    userscript,
     new RegExp(`scsq-mobile-fab__version[^>]*>v${packageJson.version.replaceAll(".", "\\.")}<`),
-    "mobile floating button should show the installed version below its Q value"
+    "userscript floating button should show the installed version below its Q value"
   );
-  assert.equal(count(mobile, 'data-scsq-inline="true"'), 4, "mobile fixture should add one inline badge per category");
+  assert.equal(count(userscript, 'data-scsq-inline="true"'), 4, "userscript fixture should add one inline badge per category");
   for (const quartile of ["q1", "q2", "q3", "q4"]) {
-    assert.match(mobile, new RegExp(`scsq-badge--${quartile}`), `mobile fixture should include ${quartile.toUpperCase()}`);
+    assert.match(userscript, new RegExp(`scsq-badge--${quartile}`), `userscript fixture should include ${quartile.toUpperCase()}`);
   }
 
-  const mobileDelayed = await renderFixture(
+  const userscriptDelayed = await renderFixture(
     chromePath,
     baseUrl,
-    "delayed-content.html?mode=mobile&open=1",
+    "delayed-content.html?mode=userscript&open=1",
     2800
   );
-  assert.equal(count(mobileDelayed, 'id="scsq-mobile-layer"'), 1, "delayed mobile fixture should not duplicate its layer");
-  assert.equal(count(mobileDelayed, 'class="scsq-mobile-fab"'), 1, "delayed mobile fixture should not duplicate its FAB");
-  assert.equal(count(mobileDelayed, 'data-scsq-inline="true"'), 1, "delayed mobile fixture should receive one inline badge");
-  assert.match(mobileDelayed, /Computer Science Applications/);
-  assert.match(mobileDelayed, /scsq-badge--q1/);
+  assert.equal(count(userscriptDelayed, 'id="scsq-mobile-layer"'), 1, "delayed userscript fixture should not duplicate its layer");
+  assert.equal(count(userscriptDelayed, 'class="scsq-mobile-fab"'), 1, "delayed userscript fixture should not duplicate its FAB");
+  assert.equal(count(userscriptDelayed, 'data-scsq-inline="true"'), 1, "delayed userscript fixture should receive one inline badge");
+  assert.match(userscriptDelayed, /Computer Science Applications/);
+  assert.match(userscriptDelayed, /scsq-badge--q1/);
 
   const clientEnglish = await renderFixture(
     chromePath,
     baseUrl,
-    "../../dist/mobile/index.html?lang=en",
+    "../../dist/mobile/index.html?lang=en&platform=chromium",
     900
   );
   assert.match(clientEnglish, /<html lang="en" dir="ltr">/);
-  assert.match(clientEnglish, /Install mobile userscript/);
+  assert.match(clientEnglish, /Install Scopus CiteScore Quartile/);
+  assert.match(clientEnglish, /data-platform-button="chromium" aria-selected="true"/);
+  assert.match(clientEnglish, /Already using the old Chrome extension/);
 
   const clientArabic = await renderFixture(
     chromePath,
     baseUrl,
-    "../../dist/mobile/index.html?lang=ar",
+    "../../dist/mobile/index.html?lang=ar&platform=ios",
     900
   );
   assert.match(clientArabic, /<html lang="ar" dir="rtl">/);
-  assert.match(clientArabic, /تثبيت سكربت الجوال/);
+  assert.match(clientArabic, /تثبيت أداة أرباع/);
+  assert.match(clientArabic, /data-platform-button="ios" aria-selected="true"/);
 
   const fixtureNames = [
     "one-category.html",
@@ -264,7 +267,15 @@ try {
   await captureFixture(
     chromePath,
     baseUrl,
-    "multiple-categories.html?mode=mobile",
+    "multiple-categories.html?mode=userscript",
+    2200,
+    "userscript-desktop-floating.png",
+    "1280,900"
+  );
+  await captureFixture(
+    chromePath,
+    baseUrl,
+    "multiple-categories.html?mode=userscript",
     2200,
     "mobile-floating-button.png",
     "600,900"
@@ -272,7 +283,7 @@ try {
   await captureFixture(
     chromePath,
     baseUrl,
-    "multiple-categories.html?mode=mobile&open=1",
+    "multiple-categories.html?mode=userscript&open=1",
     2200,
     "mobile-multiple-categories.png",
     "500,900"
@@ -280,7 +291,7 @@ try {
   await captureFixture(
     chromePath,
     baseUrl,
-    "delayed-content.html?mode=mobile&open=1",
+    "delayed-content.html?mode=userscript&open=1",
     2800,
     "mobile-delayed-content.png",
     "500,900"
@@ -288,23 +299,23 @@ try {
   await captureFixture(
     chromePath,
     baseUrl,
-    "../../dist/mobile/index.html?lang=en",
+    "../../dist/mobile/index.html?lang=en&platform=chromium",
     900,
     "client-install-en.png",
-    "900,1100"
+    "1000,1400"
   );
   await captureFixture(
     chromePath,
     baseUrl,
-    "../../dist/mobile/index.html?lang=ar",
+    "../../dist/mobile/index.html?lang=ar&platform=ios",
     900,
     "client-install-ar.png",
-    "900,1100"
+    "1000,1400"
   );
 
   console.log("Browser fixture tests: 9/9 passed in headless Chromium.");
   console.log("Manifest V3 unpacked-extension load smoke: passed.");
-  console.log("Fixture screenshots: 10 written to tests/screenshots for visual QA.");
+  console.log("Fixture screenshots: 11 written to tests/screenshots for visual QA.");
   console.log(`Browser used: ${chromePath}`);
 } finally {
   await new Promise((resolve) => server.close(resolve));

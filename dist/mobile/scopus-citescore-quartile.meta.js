@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Scopus CiteScore Quartile
 // @namespace    scopus-citescore-quartile
-// @version      2.0.1
+// @version      2.1.0
 // @author       Local build
-// @description  Shows category-specific Scopus CiteScore Quartiles with a mobile floating panel.
+// @description  Shows category-specific Scopus CiteScore Quartiles in a responsive desktop/mobile floating panel.
 // @homepage     https://kbm4biz.github.io/scopus-citescore-quartile/
 // @homepageURL  https://kbm4biz.github.io/scopus-citescore-quartile/
 // @source       https://github.com/kbm4biz/scopus-citescore-quartile

@@ -1,8 +1,8 @@
 # Privacy Policy — Scopus CiteScore Quartile
 
-Last updated: 25 July 2026
+Last updated: 26 July 2026
 
-Scopus CiteScore Quartile works locally in the user's browser. Version 2 is available as a Chrome Manifest V3 extension and as a compatible mobile userscript.
+Scopus CiteScore Quartile works locally in the user's browser. Version 2.1 uses one universal userscript as the primary product and a Chrome Manifest V3 extension as a secondary desktop fallback.
 
 ## Page data processed
 
@@ -24,43 +24,43 @@ The **Copy results** action writes result text to the clipboard only after the u
 
 ## Settings storage
 
-Only three Boolean display preferences are stored:
+Only three Boolean display preferences are stored by the page tool:
 
 - enabled;
 - show the page panel; and
 - show inline badges.
 
-The desktop build uses `chrome.storage.sync`. Chrome may synchronize these Boolean values through the user's own Chrome account, depending on their browser configuration.
+The userscript uses the manager's `GM_getValue` and `GM_setValue`. A limited `localStorage` fallback is available when the GM storage API is missing. The fallback extension uses `chrome.storage.sync`; Chrome may synchronize those Boolean values through the user's own account, depending on browser configuration.
 
-The userscript build uses the manager's `GM_getValue` and `GM_setValue`. A limited `localStorage` fallback is available when the GM storage API is missing. No journal title, category, percentile, rank, CiteScore, or copied result is stored in these settings.
+No journal title, category, percentile, rank, CiteScore, or copied result is stored in these settings.
 
-The GitHub Pages installation page may store one local language preference (`en` or `ar`) in the visitor's browser so it can reopen in the chosen language. This preference remains in that browser and contains no Scopus or personal data.
+The GitHub Pages installation page may store two local preferences: language (`en` or `ar`) and the selected platform instructions. They remain in that browser and contain no Scopus or personal data. Platform detection uses the browser's local user-agent information and is not transmitted.
 
 ## Automatic userscript update checks
 
-A userscript built and published by the included GitHub Actions workflow contains `@updateURL` and `@downloadURL` links to the owner's GitHub Pages site. The user's userscript manager may contact those URLs to compare versions or download an update. That request is controlled by the manager and GitHub Pages; the script itself does not transmit Scopus page data with it.
+The published userscript contains `@updateURL` and `@downloadURL` links to this project's GitHub Pages site. The user's userscript manager may contact those URLs to compare versions or download an update. That request is controlled by the manager and GitHub Pages; the script itself does not transmit Scopus page data with it.
 
-The locally built userscript has no update URL until a real Pages base URL is supplied at build time.
+The locally built userscript has no update URL unless a verified public Pages base URL is supplied at build time.
 
 ## Permissions
 
-Desktop:
+Universal userscript:
 
-- `storage`, for the three preferences above.
-- `https://www.scopus.com/sourceid/*`, for the content script.
-
-Mobile userscript:
-
-- the same Scopus Source Details `@match`;
+- the Scopus Source Details `@match`;
 - GM style injection for bundled local CSS;
-- GM value storage/change listeners for preferences; and
+- GM value storage and change listeners for preferences; and
 - GM clipboard access for the user-triggered **Copy results** action.
 
-Neither build requests browsing history, cookies, identity, web-request interception, broad all-sites access, or background page access.
+Fallback extension:
+
+- `storage`, for the three preferences above; and
+- `https://www.scopus.com/sourceid/*`, for the content script.
+
+Neither output requests browsing history, cookies, identity, web-request interception, broad all-sites access, or background page access.
 
 ## Removing local data
 
-Remove the desktop extension from `chrome://extensions` to remove its extension data. For a userscript, remove it and its saved values through the userscript manager. Browser-specific synchronization or backups remain controlled by the browser or manager.
+Remove the userscript and its saved values through the userscript manager. Remove the fallback extension from `chrome://extensions` to remove its extension data. Browser-specific synchronization or backups remain controlled by the browser or manager.
 
 ## Changes and affiliation
 

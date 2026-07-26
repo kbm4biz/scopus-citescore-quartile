@@ -23,12 +23,12 @@ export default defineConfig({
   },
   plugins: [
     monkey({
-      entry: "src/entry/mobile.js",
+      entry: "src/entry/userscript.js",
       userscript: {
         name: "Scopus CiteScore Quartile",
         namespace: "scopus-citescore-quartile",
         version: packageJson.version,
-        description: "Shows category-specific Scopus CiteScore Quartiles with a mobile floating panel.",
+        description: "Shows category-specific Scopus CiteScore Quartiles in a responsive desktop/mobile floating panel.",
         author: "Local build",
         match: ["https://www.scopus.com/sourceid/*"],
         "run-at": "document-idle",

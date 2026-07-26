@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -39,7 +39,34 @@ jobs:
       - name: Build and test both targets
         run: pnpm test
 
-      - name: Upload desktop extension
+      - name: Read release version
+        id: release_version
+        run: |
+          node -e 'const p=require("./package.json"); console.log("version=" + p.version)' >> "$GITHUB_OUTPUT"
+
+      - name: Package fallback extension
+        run: |
+          cd dist/desktop
+          zip -qr "../../Scopus-CiteScore-Quartile-v${{ steps.release_version.outputs.version }}-desktop.zip" .
+
+      - name: Publish versioned fallback download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.release_version.outputs.version }}
+        run: |
+          release_tag="v${RELEASE_VERSION}"
+          if gh release view "${release_tag}" >/dev/null 2>&1; then
+            echo "Release ${release_tag} already exists; leaving its immutable assets unchanged."
+          else
+            gh release create "${release_tag}" \
+              "Scopus-CiteScore-Quartile-v${RELEASE_VERSION}-desktop.zip#Chrome MV3 fallback extension" \
+              "dist/mobile/scopus-citescore-quartile.user.js#Universal userscript" \
+              --target "${GITHUB_SHA}" \
+              --title "Scopus CiteScore Quartile ${release_tag}" \
+              --notes "Universal Tampermonkey userscript plus the optional unpacked Chrome extension fallback."
+          fi
+
+      - name: Upload fallback extension build
         uses: actions/upload-artifact@v4
         with:
           name: scopus-citescore-quartile-desktop
@@ -49,7 +76,7 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload mobile site
+      - name: Upload userscript site
         uses: actions/upload-pages-artifact@v4
         with:
           path: dist/mobile
@@ -61,6 +88,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Publish mobile userscript
+      - name: Publish universal userscript
         id: deployment
         uses: actions/deploy-pages@v4

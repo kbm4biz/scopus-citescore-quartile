@@ -30,7 +30,7 @@ const clipboardWriter = typeof GM_setClipboard === "function"
   : null;
 
 initialiseScopusApp({
-  mode: "mobile",
+  mode: "userscript",
   settingsStore: createSettingsStore({ chromeApi: null, gmApi }),
   clipboardWriter,
   version: packageJson.version

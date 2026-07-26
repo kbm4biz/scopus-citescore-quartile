@@ -12,10 +12,10 @@ const html = fs.readFileSync(path.join(projectRoot, "dist", "mobile", "index.htm
 test("client installation page provides equivalent English and Arabic routes", () => {
   assert.match(html, /data-language-panel="en"/);
   assert.match(html, /data-language-panel="ar" lang="ar" dir="rtl"/);
-  assert.match(html, /Install mobile userscript/);
-  assert.match(html, /تثبيت سكربت الجوال/);
-  assert.match(html, /Automatic updates:/);
-  assert.match(html, /التحديث التلقائي:/);
+  assert.match(html, /Install Scopus CiteScore Quartile/);
+  assert.match(html, /تثبيت أداة أرباع/);
+  assert.match(html, /Updates:/);
+  assert.match(html, /التحديثات:/);
   assert.match(html, /document\.documentElement\.dir = selected === "ar" \? "rtl" : "ltr"/);
   assert.equal(
     (html.match(/href="\.\/scopus-citescore-quartile\.user\.js"/g) || []).length,
@@ -27,8 +27,18 @@ test("client installation page provides equivalent English and Arabic routes", (
 test("client installation page is current, shareable, and self-contained", () => {
   assert.match(html, new RegExp(`v${packageJson.version.replaceAll(".", "\\.")}`));
   assert.match(html, new RegExp(packageJson.homepage.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-  assert.match(html, /iPhone[\s\S]*Safari[\s\S]*Tampermonkey/);
-  assert.match(html, /Android[\s\S]*(?:Firefox|Edge)[\s\S]*Tampermonkey/);
+  for (const platform of ["chromium", "firefox", "ios", "android"]) {
+    assert.match(html, new RegExp(`data-platform-button="${platform}"`));
+    assert.match(html, new RegExp(`data-platform-panel="${platform}"`));
+  }
+  assert.match(html, /tampermonkey\.net\/\?browser=chrome/);
+  assert.match(html, /tampermonkey\.net\/\?browser=firefox/);
+  assert.match(html, /tampermonkey\.net\/\?browser=safari/);
+  assert.match(html, /Allow User Scripts/);
+  assert.match(html, /Disable or remove it before installing the userscript/);
+  assert.match(html, /Alternative desktop extension/);
+  assert.match(html, /github\.com\/kbm4biz\/scopus-citescore-quartile\/releases\/latest/);
+  assert.match(html, /function detectPlatform\(\)/);
   assert.doesNotMatch(html, /<script[^>]+src=["']https?:\/\//i);
   assert.doesNotMatch(html, /analytics|tracking pixel|googletagmanager/i);
 });

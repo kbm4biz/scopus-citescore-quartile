@@ -476,7 +476,8 @@
 	//#region src/app/scopus-app.js
 	function initialiseScopusApp({ settingsStore, mode = "desktop", clipboardWriter = null, version = "" }) {
 		const globalScope = window;
-		const loadedKey = mode === "mobile" ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
+		const isUserscript = mode === "userscript" || mode === "mobile";
+		const loadedKey = isUserscript ? "__SCSQ_MOBILE_LOADED__" : "__SCSQ_DESKTOP_LOADED__";
 		if (globalScope[loadedKey]) return globalScope[loadedKey];
 		globalScope[loadedKey] = Object.freeze({ loading: true });
 		const PANEL_ID = "scsq-citescore-quartile-panel";
@@ -768,7 +769,7 @@
 		}
 		function signatureFor(data, calculatedCategories) {
 			return JSON.stringify({
-				mode,
+				mode: isUserscript ? "userscript" : "desktop",
 				settings,
 				title: data.title,
 				year: data.year,
@@ -783,7 +784,7 @@
 			});
 		}
 		function uiIsHealthy(calculatedCategories) {
-			if (document.querySelectorAll(`[data-scsq-panel='true']`).length !== (mode === "mobile" ? 1 : settings.showPanel ? 1 : 0)) return false;
+			if (document.querySelectorAll(`[data-scsq-panel='true']`).length !== (isUserscript ? 1 : settings.showPanel ? 1 : 0)) return false;
 			const expectedBadges = settings.showInlineBadges ? calculatedCategories.filter((item) => inlineTargetFor(item)).length : 0;
 			return document.querySelectorAll(INLINE_SELECTOR).length === expectedBadges;
 		}
@@ -811,7 +812,7 @@
 				if (!force && signature === lastSignature && uiIsHealthy(calculatedCategories)) return;
 				removePanels();
 				removeInlineBadges();
-				if (mode === "mobile") insertMobileLayer(buildMobileLayer(data, calculatedCategories));
+				if (isUserscript) insertMobileLayer(buildMobileLayer(data, calculatedCategories));
 				else if (settings.showPanel) insertPanel(buildPanel(data, calculatedCategories), data.anchor);
 				if (settings.showInlineBadges) calculatedCategories.forEach((item) => {
 					const { category, result } = item;
@@ -853,7 +854,7 @@
 			document.addEventListener("change", scheduleUpdate, true);
 			document.addEventListener("click", scheduleUpdate, true);
 			document.addEventListener("keydown", (event) => {
-				if (mode === "mobile" && event.key === "Escape" && mobileDrawerOpen) setMobileDrawerOpen(false);
+				if (isUserscript && event.key === "Escape" && mobileDrawerOpen) setMobileDrawerOpen(false);
 			}, true);
 			settingsStore.subscribe((changes) => {
 				for (const key of Object.keys(DEFAULT_SETTINGS)) if (Object.prototype.hasOwnProperty.call(changes, key)) settings[key] = changes[key];
