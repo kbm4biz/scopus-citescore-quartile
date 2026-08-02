@@ -55,6 +55,7 @@
 
 .scsq-best {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
   padding-block: 0.55rem;
@@ -181,6 +182,21 @@
   vertical-align: middle;
 }
 
+.scsq-badge__quartile {
+  line-height: 1;
+}
+
+.scsq-badge__proximity {
+  margin-inline-start: 0.38rem;
+  padding-inline-start: 0.38rem;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.58);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-transform: none;
+}
+
 .scsq-badge--q1 { background: #12663a; }
 .scsq-badge--q2 { background: #0b5cab; }
 .scsq-badge--q3 { background: #8a4b00; }
@@ -193,6 +209,22 @@
   min-block-size: 1.55rem;
   padding-inline: 0.42rem;
   font-size: 0.75rem;
+}
+
+.scsq-inline-badge .scsq-badge__proximity {
+  font-size: 0.65rem;
+}
+
+.scsq-proximity-note {
+  margin-block: 0.9rem 0;
+  margin-inline: 0;
+  padding-block: 0.65rem;
+  padding-inline: 0.75rem;
+  color: #29464f;
+  background: #eef7fb;
+  border-inline-start: 4px solid #0b5cab;
+  border-radius: 6px;
+  font-size: 0.82rem;
 }
 
 .scsq-badge:focus-visible,
@@ -344,6 +376,15 @@
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0;
+}
+
+.scsq-mobile-fab__proximity {
+  color: inherit;
+  font-size: 0.52rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .scsq-mobile-fab__quartile--q1 { background: #12663a; }

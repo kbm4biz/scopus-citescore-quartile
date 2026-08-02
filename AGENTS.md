@@ -64,6 +64,16 @@ tests/                       Unit, browser, fixture, and visual tests
 - Use CSS logical properties (`inline`, `block`, `margin-inline`, `border-inline-start`) so the same styles work in left-to-right and right-to-left layouts.
 - Never hide or rewrite the website's original metrics or content.
 
+## Threshold-position context
+
+- When a broad result band hides meaningful placement within that band, show the exact distance to the next better threshold beside every live result badge.
+- Calculate that distance from the same category-specific primary value used to assign the band. Never substitute an unrelated absolute score.
+- Use an unambiguous compact label in badges and a full explanation in tooltips or detail panels.
+- If the top band has no better threshold, label it as the highest band rather than inventing a distance.
+- If the underlying value is estimated, visibly mark the threshold distance as estimated too.
+- Describe threshold distance as the current position, not a prediction that the result will improve later.
+- Cover boundary values, different positions within the same band, best-summary selection, inline results, floating controls, and responsive layouts in tests.
+
 ## Bilingual client installation page
 
 Every distributed project must publish a simple GitHub Pages installation page in both English and Arabic.

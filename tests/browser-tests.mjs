@@ -181,6 +181,18 @@ try {
     assert.match(multiple, new RegExp(`scsq-badge--${quartile}`), `multiple fixture should include ${quartile.toUpperCase()}`);
   }
   assert.match(multiple, /Economics and Econometrics[\s\S]*?74%[\s\S]*?Q2[\s\S]*?Scopus percentile/);
+  assert.match(multiple, /Q2[\s\S]*?1 pt to Q1/);
+  assert.match(multiple, /Q3[\s\S]*?1 pt to Q2/);
+  assert.match(multiple, /Q4[\s\S]*?1 pt to Q3/);
+  assert.match(multiple, /Distance to the next better quartile is the percentile-point gap/);
+
+  const sameQuartile = await renderFixture(chromePath, baseUrl, "same-quartile-proximity.html");
+  assert.equal(count(sameQuartile, 'data-scsq-inline="true"'), 2, "same-quartile fixture should add two inline badges");
+  assert.equal(count(sameQuartile, 'class="scsq-badge__proximity"'), 5, "every panel, best, and inline Q badge should include proximity");
+  assert.equal(count(sameQuartile, '>1 pt to Q2</small>'), 3, "percentile 49 and the best summary should show one point to Q2");
+  assert.equal(count(sameQuartile, '>25 pt to Q2</small>'), 2, "percentile 25 should show twenty-five points to Q2");
+  assert.match(sameQuartile, /1 percentile point to Q2 \(threshold 50\)/);
+  assert.match(sameQuartile, /25 percentile points to Q2 \(threshold 50\)/);
 
   const delayed = await renderFixture(chromePath, baseUrl, "delayed-content.html", 2400);
   assert.equal(count(delayed, 'data-scsq-panel="true"'), 1, "delayed fixture should receive one panel after rendering");
@@ -194,6 +206,7 @@ try {
   assert.match(rankOnly, /Estimated percentile: 87/);
   assert.match(rankOnly, /42\/320/);
   assert.match(rankOnly, /scsq-badge--q1/);
+  assert.match(rankOnly, /≈ highest/);
 
   const variation = await renderFixture(chromePath, baseUrl, "layout-variation.html");
   assert.equal(count(variation, 'data-scsq-inline="true"'), 2, "hidden unrelated category must not be scraped");
@@ -216,6 +229,8 @@ try {
     new RegExp(`scsq-mobile-fab__version[^>]*>v${packageJson.version.replaceAll(".", "\\.")}<`),
     "userscript floating button should show the installed version below its Q value"
   );
+  assert.match(userscript, /scsq-mobile-fab__proximity[^>]*>highest</);
+  assert.equal(count(userscript, 'class="scsq-badge__proximity"'), 9, "every userscript panel, best, and inline Q badge should include proximity");
   assert.equal(count(userscript, 'data-scsq-inline="true"'), 4, "userscript fixture should add one inline badge per category");
   for (const quartile of ["q1", "q2", "q3", "q4"]) {
     assert.match(userscript, new RegExp(`scsq-badge--${quartile}`), `userscript fixture should include ${quartile.toUpperCase()}`);
@@ -259,7 +274,8 @@ try {
     "multiple-categories.html",
     "delayed-content.html",
     "rank-only.html",
-    "layout-variation.html"
+    "layout-variation.html",
+    "same-quartile-proximity.html"
   ];
   for (const fixture of fixtureNames) {
     await captureFixture(chromePath, baseUrl, fixture, fixture === "delayed-content.html" ? 2400 : 1800);
@@ -313,9 +329,9 @@ try {
     "1000,1400"
   );
 
-  console.log("Browser fixture tests: 9/9 passed in headless Chromium.");
+  console.log("Browser fixture tests: 10/10 passed in headless Chromium.");
   console.log("Manifest V3 unpacked-extension load smoke: passed.");
-  console.log("Fixture screenshots: 11 written to tests/screenshots for visual QA.");
+  console.log("Fixture screenshots: 12 written to tests/screenshots for visual QA.");
   console.log(`Browser used: ${chromePath}`);
 } finally {
   await new Promise((resolve) => server.close(resolve));

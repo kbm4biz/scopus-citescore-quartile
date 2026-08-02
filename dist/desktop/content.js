@@ -25,6 +25,41 @@
 		if (percentile >= 25) return "Q3";
 		return "Q4";
 	}
+	function proximityToBetterQuartile(value) {
+		const percentile = parsePercentile(value);
+		if (percentile === null) return null;
+		const quartile = quartileFromPercentile(percentile);
+		if (quartile === "Q1") return {
+			quartile,
+			percentile,
+			isHighest: true,
+			nextQuartile: null,
+			nextThreshold: null,
+			pointsToNext: null
+		};
+		const next = {
+			Q2: {
+				nextQuartile: "Q1",
+				nextThreshold: 75
+			},
+			Q3: {
+				nextQuartile: "Q2",
+				nextThreshold: 50
+			},
+			Q4: {
+				nextQuartile: "Q3",
+				nextThreshold: 25
+			}
+		}[quartile];
+		return {
+			quartile,
+			percentile,
+			isHighest: false,
+			nextQuartile: next.nextQuartile,
+			nextThreshold: next.nextThreshold,
+			pointsToNext: next.nextThreshold - percentile
+		};
+	}
 	function validateRank(rank, total) {
 		const parsedRank = typeof rank === "number" ? rank : Number(rank);
 		const parsedTotal = typeof total === "number" ? total : Number(total);
@@ -56,7 +91,8 @@
 			rank: input && input.rank ? validateRank(input.rank.rank, input.rank.total) : null,
 			estimated: false,
 			label: "CiteScore Quartile",
-			source: SOURCE_PERCENTILE
+			source: SOURCE_PERCENTILE,
+			proximity: proximityToBetterQuartile(displayedPercentile)
 		};
 		const validRank = input && input.rank ? validateRank(input.rank.rank, input.rank.total) : null;
 		const estimatedPercentile = validRank ? estimatedPercentileFromRank(validRank.rank, validRank.total) : null;
@@ -68,7 +104,8 @@
 			rank: validRank,
 			estimated: true,
 			label: "Estimated CiteScore Quartile",
-			source: SOURCE_RANK
+			source: SOURCE_RANK,
+			proximity: proximityToBetterQuartile(estimatedPercentile)
 		};
 		return {
 			category,
@@ -78,13 +115,22 @@
 			rank: null,
 			estimated: false,
 			label: "Unable to calculate",
-			source: "Unavailable"
+			source: "Unavailable",
+			proximity: null
 		};
 	}
-	function bestQuartile(results) {
+	function bestQuartileResult(results) {
 		if (!Array.isArray(results)) return null;
-		const valid = results.map((result) => result && /^Q[1-4]$/.test(result.quartile) ? result.quartile : null).filter(Boolean).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
-		return valid.length ? valid[0] : null;
+		const valid = results.filter((result) => result && /^Q[1-4]$/.test(result.quartile));
+		valid.sort((left, right) => {
+			const quartileDifference = Number(left.quartile.slice(1)) - Number(right.quartile.slice(1));
+			if (quartileDifference !== 0) return quartileDifference;
+			const leftPercentile = Number.isFinite(left.percentile) ? left.percentile : -1;
+			const percentileDifference = (Number.isFinite(right.percentile) ? right.percentile : -1) - leftPercentile;
+			if (percentileDifference !== 0) return percentileDifference;
+			return Number(left.estimated) - Number(right.estimated);
+		});
+		return valid[0] || null;
 	}
 	//#endregion
 	//#region src/core/scopus-parser.js
@@ -508,16 +554,38 @@
 		function removeInlineBadges() {
 			document.querySelectorAll(INLINE_SELECTOR).forEach((element) => element.remove());
 		}
+		function proximityFor(result) {
+			return result?.proximity || proximityToBetterQuartile(result?.percentile);
+		}
+		function compactProximityText(result) {
+			const proximity = proximityFor(result);
+			if (!proximity) return "unavailable";
+			if (proximity.isHighest) return result.estimated ? "≈ highest" : "highest";
+			return `${result.estimated ? "≈" : ""}${proximity.pointsToNext} pt to ${proximity.nextQuartile}`;
+		}
+		function proximitySummary(result) {
+			const proximity = proximityFor(result);
+			if (!proximity) return "Quartile proximity unavailable";
+			if (proximity.isHighest) return result.estimated ? "Estimated to be in the highest CiteScore quartile" : "Already in the highest CiteScore quartile";
+			const pointsLabel = proximity.pointsToNext === 1 ? "point" : "points";
+			return `${result.estimated ? "Estimated distance: " : ""}${proximity.pointsToNext} percentile ${pointsLabel} to ${proximity.nextQuartile} (threshold ${proximity.nextThreshold})`;
+		}
+		function bestCategoryItem(calculatedCategories) {
+			const bestResult = bestQuartileResult(calculatedCategories.map((item) => item.result));
+			return bestResult ? calculatedCategories.find((item) => item.result === bestResult) || null : null;
+		}
 		function resultTooltip(result, category, year) {
 			const safeCategory = sanitizeText(category, 240) || "this subject category";
 			const safeYear = sanitizeText(year, 20) || "unavailable";
 			if (!result.quartile) return `Unable to calculate a CiteScore quartile for ${safeCategory}, CiteScore year ${safeYear}.`;
-			if (result.estimated && result.rank) return `Estimated CiteScore ${result.quartile} calculated from rank ${result.rank.rank}/${result.rank.total} (estimated percentile ${result.percentile}) for ${safeCategory}, CiteScore year ${safeYear}.`;
-			return `CiteScore ${result.quartile} calculated from percentile ${result.percentile} for ${safeCategory}, CiteScore year ${safeYear}.`;
+			const proximitySentence = `${proximitySummary(result)}.`;
+			if (result.estimated && result.rank) return `Estimated CiteScore ${result.quartile} calculated from rank ${result.rank.rank}/${result.rank.total} (estimated percentile ${result.percentile}) for ${safeCategory}, CiteScore year ${safeYear}. ${proximitySentence}`;
+			return `CiteScore ${result.quartile} calculated from percentile ${result.percentile} for ${safeCategory}, CiteScore year ${safeYear}. ${proximitySentence}`;
 		}
 		function makeBadge(result, category, year, inline = false) {
 			const badge = createElement("span", `scsq-badge scsq-badge--${result.quartile ? result.quartile.toLowerCase() : "unknown"}`);
-			badge.textContent = result.quartile || "N/A";
+			badge.appendChild(createElement("span", "scsq-badge__quartile", result.quartile || "N/A"));
+			if (result.quartile) badge.appendChild(createElement("small", "scsq-badge__proximity", compactProximityText(result)));
 			badge.title = resultTooltip(result, category, year);
 			badge.setAttribute("aria-label", badge.title);
 			badge.dataset.scsqOwned = "true";
@@ -528,20 +596,21 @@
 			return badge;
 		}
 		function copyText(data, calculatedCategories) {
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const bestItem = bestCategoryItem(calculatedCategories);
+			const best = bestItem?.result || null;
 			const lines = [
 				"Scopus CiteScore Quartile",
 				`Source: ${data.title}`,
 				`CiteScore year: ${data.year}`,
 				`CiteScore value: ${data.citeScore}`,
-				`Best CiteScore Quartile: ${best || "Unable to calculate"}`,
+				`Best CiteScore Quartile: ${best ? `${best.quartile} | ${proximitySummary(best)} | Category: ${bestItem.category}` : "Unable to calculate"}`,
 				""
 			];
 			calculatedCategories.forEach(({ category, result }) => {
 				const percentile = result.displayedPercentile !== null ? `${result.displayedPercentile}%` : "Not displayed";
 				const rank = result.rank ? `${result.rank.rank}/${result.rank.total}` : "Not displayed";
 				const estimatedDetail = result.estimated ? ` | Estimated percentile: ${result.percentile}` : "";
-				lines.push(`${category} | Percentile: ${percentile} | Rank: ${rank}${estimatedDetail} | ${result.label}: ${result.quartile || "Unable to calculate"} | Source: ${result.source}`);
+				lines.push(`${category} | Percentile: ${percentile} | Rank: ${rank}${estimatedDetail} | ${result.label}: ${result.quartile || "Unable to calculate"} | Position: ${proximitySummary(result)} | Source: ${result.source}`);
 			});
 			lines.push("", "This is a CiteScore-based quartile calculated from Scopus percentile data. It is not a JCR or SCImago/SJR quartile. Quartiles may differ by subject category.");
 			return lines.join("\n");
@@ -578,16 +647,18 @@
 			heading.id = `${panel.id}-title`;
 			headingGroup.appendChild(heading);
 			headingGroup.appendChild(createElement("p", "scsq-panel__source-title", data.title));
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const bestItem = bestCategoryItem(calculatedCategories);
+			const best = bestItem?.result || null;
 			const bestBox = createElement("div", "scsq-best");
 			bestBox.appendChild(createElement("span", "scsq-best__label", "Best CiteScore Quartile:"));
-			const bestBadge = makeBadge({
-				quartile: best,
+			const bestBadge = makeBadge({ ...best || {
+				quartile: null,
 				percentile: null,
 				estimated: false,
-				rank: null
-			}, "all displayed subject categories", data.year);
-			bestBadge.title = best ? `Best CiteScore Quartile across the displayed subject categories: ${best}. CiteScore year ${data.year}.` : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
+				rank: null,
+				proximity: null
+			} }, bestItem?.category || "all displayed subject categories", data.year);
+			bestBadge.title = best ? `Best CiteScore Quartile across the displayed subject categories: ${best.quartile}, from ${bestItem.category}. ${proximitySummary(best)}. CiteScore year ${data.year}.` : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
 			bestBadge.setAttribute("aria-label", bestBadge.title);
 			bestBox.appendChild(bestBadge);
 			header.append(headingGroup, bestBox);
@@ -661,6 +732,7 @@
 			});
 			actions.append(copyButton, copyStatus);
 			panel.appendChild(actions);
+			panel.appendChild(createElement("p", "scsq-proximity-note", "Distance to the next better quartile is the percentile-point gap from the displayed percentile to that quartile's threshold. Rank-based distances are estimates and do not predict future movement."));
 			panel.appendChild(createElement("p", "scsq-note", "This is a CiteScore-based quartile calculated from Scopus percentile data. It is not a JCR or SCImago/SJR quartile. Quartiles may differ by subject category."));
 			return panel;
 		}
@@ -685,14 +757,14 @@
 			layer.id = MOBILE_LAYER_ID;
 			layer.dataset.scsqOwned = "true";
 			layer.dataset.scsqPanel = "true";
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const best = bestCategoryItem(calculatedCategories)?.result || null;
 			const fab = createElement("button", "scsq-mobile-fab");
 			fab.type = "button";
 			fab.setAttribute("aria-controls", MOBILE_DRAWER_ID);
 			fab.setAttribute("aria-expanded", String(mobileDrawerOpen));
-			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.${version ? ` Version ${version}.` : ""}`);
-			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`);
-			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best || "Q?"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
+			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best ? `${best.quartile}. ${proximitySummary(best)}.` : "unavailable."}${version ? ` Version ${version}.` : ""}`);
+			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.quartile.toLowerCase() : "unknown"}`);
+			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best?.quartile || "Q?"), createElement("small", "scsq-mobile-fab__proximity", best ? compactProximityText(best) : "unavailable"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
 			fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
 			const backdrop = createElement("button", "scsq-mobile-backdrop");
 			backdrop.type = "button";

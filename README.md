@@ -1,6 +1,6 @@
 # Scopus CiteScore Quartile
 
-Version 2.1.0 uses one vanilla JavaScript codebase to create:
+Version 2.2.0 uses one vanilla JavaScript codebase to create:
 
 - one universal Tampermonkey userscript for supported desktop and mobile browsers; and
 - one Chrome Manifest V3 extension as a secondary desktop fallback.
@@ -84,6 +84,17 @@ The displayed Scopus CiteScore Percentile is always the primary input:
 | 0–24 | Q4 |
 
 Scopus does not normally produce a 100th percentile, but the calculator handles 100 safely as Q1. Tested boundary values include 99, 75, 74, 50, 49, 25, 24, and 0.
+
+### Distance to the next better quartile
+
+Every visible Q badge also shows the current category's exact percentile-point gap to the next better quartile:
+
+- percentile 49 shows **Q3 · 1 pt to Q2**;
+- percentile 25 shows **Q3 · 25 pt to Q2**;
+- percentile 74 shows **Q2 · 1 pt to Q1**; and
+- Q1 shows **highest** because no better quartile exists.
+
+This distance is calculated from the category-specific Scopus percentile, never from the absolute CiteScore. It describes the current threshold position; it does not predict that the source will move to another quartile. When only rank is available, the badge uses `≈` and the panel labels the distance as estimated.
 
 ### Estimated rank fallback
 
@@ -201,7 +212,7 @@ See [PRIVACY.md](PRIVACY.md) and [TEST-REPORT.md](TEST-REPORT.md).
 
 ## Testing disclosure
 
-**Version 2.1.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in Chrome against realistic local fixtures, including delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the fallback MV3 load, desktop/narrow userscript UI, and the bilingual platform-specific client page.
+**Version 2.2.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in Chrome against realistic local fixtures, including different placements within the same quartile, delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the fallback MV3 load, desktop/narrow userscript UI, and the bilingual platform-specific client page.
 
 The GitHub workflow and live Pages files were also verified after publishing. Physical iPhone/Android installation and every possible userscript manager were not tested.
 

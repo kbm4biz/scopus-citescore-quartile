@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Scopus CiteScore Quartile
 // @namespace    scopus-citescore-quartile
-// @version      2.1.0
+// @version      2.2.0
 // @author       Local build
 // @description  Shows category-specific Scopus CiteScore Quartiles in a responsive desktop/mobile floating panel.
 // @homepage     https://kbm4biz.github.io/scopus-citescore-quartile/
@@ -36,7 +36,7 @@
 	var _GM_setValue = (() => typeof GM_setValue != "undefined" ? GM_setValue : void 0)();
 	var package_default = {
 		name: "scopus-citescore-quartile",
-		version: "2.1.0",
+		version: "2.2.0",
 		"private": true,
 		type: "module",
 		description: "A universal desktop/mobile userscript with a Manifest V3 fallback, built from one Vite codebase.",
@@ -60,7 +60,7 @@
 			"vite-plugin-monkey": "8.1.0"
 		}
 	};
-	_css(".scsq-panel,.scsq-panel *,.scsq-badge{box-sizing:border-box}.scsq-panel{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;direction:inherit;color:#172b35;border:1px solid #b8ccd4;text-align:start;background:#fff;border-inline-start:5px solid #006b73;border-radius:10px;max-inline-size:100%;margin-block-start:1.25rem;margin-block-end:1.25rem;margin-inline-start:0;margin-inline-end:0;padding:1.25rem;font-family:Arial,Segoe UI,Tahoma,sans-serif;font-size:14px;line-height:1.45;display:block;box-shadow:0 4px 16px #1034401f}.scsq-panel__header{flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:1rem;margin-block-end:1rem;display:flex}.scsq-panel__heading-group{flex:20rem;min-inline-size:0}.scsq-panel__title{color:#0f3c47;margin:0;font:700 1.25rem/1.3 Arial,Segoe UI,Tahoma,sans-serif}.scsq-panel__source-title{overflow-wrap:anywhere;color:#3a5059;unicode-bidi:plaintext;margin-block-start:.3rem;margin-block-end:0;margin-inline-start:0;margin-inline-end:0;font-weight:600}.scsq-best{background:#edf7f6;border:1px solid #a7d7d2;border-radius:8px;align-items:center;gap:.5rem;padding-block-start:.55rem;padding-block-end:.55rem;padding-inline-start:.7rem;padding-inline-end:.7rem;display:inline-flex}.scsq-best__label{font-weight:700}.scsq-metadata{background:#f3f7f8;border-radius:7px;grid-template-columns:max-content minmax(4rem,auto) max-content minmax(4rem,auto);gap:.35rem .65rem;margin-block-start:0;margin-block-end:1rem;margin-inline-start:0;margin-inline-end:0;padding:.65rem;display:grid}.scsq-metadata__label{color:#425961;font-weight:700}.scsq-metadata__value{unicode-bidi:plaintext;margin:0}.scsq-table-wrap{border:1px solid #cedde2;border-radius:8px;max-inline-size:100%;overflow-x:auto}.scsq-table{width:100%;border-collapse:collapse;color:#172b35;min-inline-size:46rem;font:400 .9rem/1.4 Arial,Segoe UI,Tahoma,sans-serif}.scsq-table th,.scsq-table td{text-align:start;vertical-align:middle;unicode-bidi:plaintext;border-block-end:1px solid #dce7ea;padding-block-start:.65rem;padding-block-end:.65rem;padding-inline-start:.7rem;padding-inline-end:.7rem}.scsq-table thead th{color:#fff;background:#155766;font-weight:700}.scsq-table tbody tr:last-child>*{border-block-end:0}.scsq-table tbody tr:nth-child(2n){background:#f6f9fa}.scsq-table__category{min-inline-size:15rem;font-weight:600}.scsq-calculation{color:#30474f;min-inline-size:12rem}.scsq-quartile-type,.scsq-calculation__detail{margin-block-start:.3rem;font-size:.75rem;line-height:1.25;display:block}.scsq-quartile-type{color:#6b4300;font-weight:700}.scsq-calculation__source{font-weight:600}.scsq-calculation__detail{color:#594514}.scsq-calculation--estimated{color:#6b4300;font-weight:600}.scsq-badge{color:#fff;letter-spacing:.02em;white-space:nowrap;vertical-align:middle;border:2px solid #0000;border-radius:999px;justify-content:center;align-items:center;min-block-size:1.75rem;min-inline-size:2.55rem;padding-block-start:.2rem;padding-block-end:.2rem;padding-inline-start:.55rem;padding-inline-end:.55rem;font:700 .82rem/1 Arial,Segoe UI,Tahoma,sans-serif;display:inline-flex}.scsq-badge--q1{background:#12663a}.scsq-badge--q2{background:#0b5cab}.scsq-badge--q3{background:#8a4b00}.scsq-badge--q4{background:#b42318}.scsq-badge--unknown{background:#5f6368}.scsq-inline-badge{min-block-size:1.55rem;min-inline-size:2.2rem;margin-inline-start:.45rem;padding-inline-start:.42rem;padding-inline-end:.42rem;font-size:.75rem}.scsq-badge:focus-visible{outline-offset:2px;outline:3px solid #111}.scsq-copy-button:focus-visible{outline-offset:2px;outline:3px solid #111}.scsq-actions{align-items:center;gap:.75rem;margin-block-start:1rem;display:flex}.scsq-copy-button{-webkit-appearance:none;appearance:none;color:#fff;cursor:pointer;background:#006b73;border:2px solid #006b73;border-radius:7px;min-block-size:2.5rem;padding-block-start:.55rem;padding-block-end:.55rem;padding-inline-start:.9rem;padding-inline-end:.9rem;font:700 .9rem/1 Arial,Segoe UI,Tahoma,sans-serif}.scsq-copy-button:hover{background:#004f56;border-color:#004f56}.scsq-copy-status{color:#30474f;min-block-size:1.25rem}.scsq-note,.scsq-empty{color:#3f3600;unicode-bidi:plaintext;background:#fff8d8;border-inline-start:4px solid #8a6200;border-radius:5px;margin-block-start:1rem;margin-block-end:0;margin-inline-start:0;margin-inline-end:0;padding-block-start:.7rem;padding-block-end:.7rem;padding-inline-start:.8rem;padding-inline-end:.8rem}.scsq-empty{color:#3f4c52;background:#f1f4f5;border-inline-start-color:#6b7d85}.scsq-visually-hidden{clip:rect(0, 0, 0, 0)!important;white-space:nowrap!important;border:0!important;block-size:1px!important;inline-size:1px!important;margin:-1px!important;padding:0!important;position:absolute!important;overflow:hidden!important}.scsq-copy-fallback{position:fixed;top:0}.scsq-copy-fallback:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:-9999px}.scsq-copy-fallback:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:-9999px}.scsq-copy-fallback:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:-9999px}.scsq-copy-fallback:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:-9999px}@media (max-width:680px){.scsq-panel{padding:.9rem}.scsq-panel__header{display:block}.scsq-best{margin-block-start:.8rem}.scsq-metadata{grid-template-columns:max-content 1fr}}@media (prefers-reduced-motion:reduce){.scsq-panel *,.scsq-badge{scroll-behavior:auto!important;transition:none!important}}.scsq-mobile-layer,.scsq-mobile-layer *{box-sizing:border-box}.scsq-mobile-fab{z-index:2147483600;color:#fff;cursor:pointer;background:#064f58;border:2px solid #fff;border-radius:999px;align-items:center;gap:.55rem;min-block-size:3.25rem;padding-block-start:.45rem;padding-block-end:.45rem;padding-inline-start:.55rem;padding-inline-end:.85rem;font:700 .9rem/1 Arial,Segoe UI,Tahoma,sans-serif;display:inline-flex;position:fixed;bottom:max(18px, env(safe-area-inset-bottom));box-shadow:0 6px 22px #00000052}.scsq-mobile-fab:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab__quartile{color:#fff;border-radius:1rem;flex-direction:column;justify-content:center;align-items:center;gap:.12rem;min-block-size:2.75rem;min-inline-size:2.75rem;padding-inline-start:.35rem;padding-inline-end:.35rem;font-weight:800;display:inline-flex}.scsq-mobile-fab__quartile-value{font-size:.92rem;line-height:1}.scsq-mobile-fab__version{color:inherit;letter-spacing:0;font-size:.56rem;font-weight:700;line-height:1}.scsq-mobile-fab__quartile--q1{background:#12663a}.scsq-mobile-fab__quartile--q2{background:#0b5cab}.scsq-mobile-fab__quartile--q3{background:#8a4b00}.scsq-mobile-fab__quartile--q4{background:#b42318}.scsq-mobile-fab__quartile--unknown{background:#5f6368}.scsq-mobile-fab:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-close:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-setting input:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-backdrop{z-index:2147483601;opacity:0;pointer-events:none;background:#07191f8a;border:0;block-size:100%;inline-size:100%;padding:0;transition:opacity .18s;display:block;position:fixed;top:0;bottom:0;left:0;right:0}.scsq-mobile-backdrop.is-open{opacity:1;pointer-events:auto}.scsq-mobile-drawer{z-index:2147483602;block-size:100vh;inline-size:min(94vw,500px);color:#172b35;text-align:start;visibility:hidden;background:#f3f7f8;border:0;flex-direction:column;block-size:100dvh;font-family:Arial,Segoe UI,Tahoma,sans-serif;transition:transform .2s,visibility 0s linear .2s;display:flex;position:fixed;top:0;bottom:0;transform:translate(105%);box-shadow:-8px 0 28px #00000047}.scsq-mobile-drawer:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:0}.scsq-mobile-drawer:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:0}.scsq-mobile-drawer:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:0}.scsq-mobile-drawer:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:0}:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)) .scsq-mobile-drawer{transform:translate(-105%);box-shadow:8px 0 28px #00000047}:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)) .scsq-mobile-drawer{transform:translate(-105%);box-shadow:8px 0 28px #00000047}.scsq-mobile-drawer.is-open{visibility:visible;transition:transform .2s;transform:translate(0)}.scsq-mobile-drawer__header{padding-block:max(.8rem, env(safe-area-inset-top)) .8rem;color:#fff;background:#0f5663;justify-content:space-between;align-items:center;gap:.75rem;padding-inline-start:1rem;padding-inline-end:1rem;display:flex}.scsq-mobile-drawer__title{color:inherit;margin:0;font:700 1.05rem/1.3 Arial,Segoe UI,Tahoma,sans-serif}.scsq-mobile-close{color:#0f3c47;cursor:pointer;background:#fff;border:2px solid #fff;border-radius:7px;min-block-size:2.5rem;padding-block-start:.45rem;padding-block-end:.45rem;padding-inline-start:.75rem;padding-inline-end:.75rem;font:700 .86rem/1 Arial,Segoe UI,Tahoma,sans-serif}.scsq-mobile-drawer__scroll{overscroll-behavior:contain;padding-block:.75rem max(1rem, env(safe-area-inset-bottom));flex:auto;padding-inline-start:.75rem;padding-inline-end:.75rem;overflow-y:auto}.scsq-mobile-setting{color:#19343d;background:#fff;border:1px solid #c7d9df;border-radius:8px;justify-content:space-between;align-items:center;gap:1rem;margin-block-end:.75rem;padding-block-start:.7rem;padding-block-end:.7rem;padding-inline-start:.85rem;padding-inline-end:.85rem;font:600 .9rem/1.3 Arial,Segoe UI,Tahoma,sans-serif;display:flex}.scsq-mobile-setting input{accent-color:#006b73;block-size:1.35rem;inline-size:1.35rem}.scsq-panel--mobile{box-shadow:none;border-inline-start-width:4px;border-radius:8px;margin:0;padding:.85rem}.scsq-panel--mobile .scsq-panel__header{display:block}.scsq-panel--mobile .scsq-best{margin-block-start:.7rem}.scsq-panel--mobile .scsq-metadata{grid-template-columns:max-content 1fr}.scsq-panel--mobile .scsq-table{min-inline-size:42rem}@media (max-width:540px){.scsq-mobile-fab__label{display:none}.scsq-mobile-fab{padding-inline-start:.45rem;padding-inline-end:.45rem}.scsq-mobile-drawer{inline-size:auto}.scsq-mobile-drawer:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:0}.scsq-mobile-drawer:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:0}.scsq-mobile-drawer:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:0}.scsq-mobile-drawer:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:0}.scsq-panel--mobile .scsq-table-wrap{border:0;overflow:visible}.scsq-panel--mobile .scsq-table,.scsq-panel--mobile .scsq-table tbody,.scsq-panel--mobile .scsq-table tr,.scsq-panel--mobile .scsq-table th,.scsq-panel--mobile .scsq-table td{inline-size:100%;min-inline-size:0;display:block}.scsq-panel--mobile .scsq-table thead{display:none}.scsq-panel--mobile .scsq-table tbody tr{background:#fff;border:1px solid #cedde2;border-radius:8px;margin-block-end:.75rem;overflow:hidden}.scsq-panel--mobile .scsq-table tbody tr:last-child{margin-block-end:0}.scsq-panel--mobile .scsq-table__category{color:#fff;background:#155766;border:0;padding-block-start:.75rem;padding-block-end:.75rem;padding-inline-start:.8rem;padding-inline-end:.8rem}.scsq-panel--mobile .scsq-table td{grid-template-columns:minmax(7.5rem,42%) minmax(0,1fr);align-items:center;gap:.65rem;padding-block-start:.6rem;padding-block-end:.6rem;padding-inline-start:.8rem;padding-inline-end:.8rem;display:grid}.scsq-panel--mobile .scsq-table td:before{content:attr(data-label);color:#425961;font-weight:700}.scsq-panel--mobile .scsq-table td>.scsq-badge{justify-self:start}}@media (prefers-reduced-motion:reduce){.scsq-mobile-backdrop,.scsq-mobile-drawer{transition:none}}");
+	_css(".scsq-panel,.scsq-panel *,.scsq-badge{box-sizing:border-box}.scsq-panel{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;direction:inherit;color:#172b35;border:1px solid #b8ccd4;text-align:start;background:#fff;border-inline-start:5px solid #006b73;border-radius:10px;max-inline-size:100%;margin-block-start:1.25rem;margin-block-end:1.25rem;margin-inline-start:0;margin-inline-end:0;padding:1.25rem;font-family:Arial,Segoe UI,Tahoma,sans-serif;font-size:14px;line-height:1.45;display:block;box-shadow:0 4px 16px #1034401f}.scsq-panel__header{flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:1rem;margin-block-end:1rem;display:flex}.scsq-panel__heading-group{flex:20rem;min-inline-size:0}.scsq-panel__title{color:#0f3c47;margin:0;font:700 1.25rem/1.3 Arial,Segoe UI,Tahoma,sans-serif}.scsq-panel__source-title{overflow-wrap:anywhere;color:#3a5059;unicode-bidi:plaintext;margin-block-start:.3rem;margin-block-end:0;margin-inline-start:0;margin-inline-end:0;font-weight:600}.scsq-best{background:#edf7f6;border:1px solid #a7d7d2;border-radius:8px;flex-wrap:wrap;align-items:center;gap:.5rem;padding-block-start:.55rem;padding-block-end:.55rem;padding-inline-start:.7rem;padding-inline-end:.7rem;display:inline-flex}.scsq-best__label{font-weight:700}.scsq-metadata{background:#f3f7f8;border-radius:7px;grid-template-columns:max-content minmax(4rem,auto) max-content minmax(4rem,auto);gap:.35rem .65rem;margin-block-start:0;margin-block-end:1rem;margin-inline-start:0;margin-inline-end:0;padding:.65rem;display:grid}.scsq-metadata__label{color:#425961;font-weight:700}.scsq-metadata__value{unicode-bidi:plaintext;margin:0}.scsq-table-wrap{border:1px solid #cedde2;border-radius:8px;max-inline-size:100%;overflow-x:auto}.scsq-table{width:100%;border-collapse:collapse;color:#172b35;min-inline-size:46rem;font:400 .9rem/1.4 Arial,Segoe UI,Tahoma,sans-serif}.scsq-table th,.scsq-table td{text-align:start;vertical-align:middle;unicode-bidi:plaintext;border-block-end:1px solid #dce7ea;padding-block-start:.65rem;padding-block-end:.65rem;padding-inline-start:.7rem;padding-inline-end:.7rem}.scsq-table thead th{color:#fff;background:#155766;font-weight:700}.scsq-table tbody tr:last-child>*{border-block-end:0}.scsq-table tbody tr:nth-child(2n){background:#f6f9fa}.scsq-table__category{min-inline-size:15rem;font-weight:600}.scsq-calculation{color:#30474f;min-inline-size:12rem}.scsq-quartile-type,.scsq-calculation__detail{margin-block-start:.3rem;font-size:.75rem;line-height:1.25;display:block}.scsq-quartile-type{color:#6b4300;font-weight:700}.scsq-calculation__source{font-weight:600}.scsq-calculation__detail{color:#594514}.scsq-calculation--estimated{color:#6b4300;font-weight:600}.scsq-badge{color:#fff;letter-spacing:.02em;white-space:nowrap;vertical-align:middle;border:2px solid #0000;border-radius:999px;justify-content:center;align-items:center;min-block-size:1.75rem;min-inline-size:2.55rem;padding-block-start:.2rem;padding-block-end:.2rem;padding-inline-start:.55rem;padding-inline-end:.55rem;font:700 .82rem/1 Arial,Segoe UI,Tahoma,sans-serif;display:inline-flex}.scsq-badge__quartile{line-height:1}.scsq-badge__proximity{letter-spacing:0;text-transform:none;border-inline-start:1px solid #ffffff94;margin-inline-start:.38rem;padding-inline-start:.38rem;font-size:.68rem;font-weight:700;line-height:1.1}.scsq-badge--q1{background:#12663a}.scsq-badge--q2{background:#0b5cab}.scsq-badge--q3{background:#8a4b00}.scsq-badge--q4{background:#b42318}.scsq-badge--unknown{background:#5f6368}.scsq-inline-badge{min-block-size:1.55rem;min-inline-size:2.2rem;margin-inline-start:.45rem;padding-inline-start:.42rem;padding-inline-end:.42rem;font-size:.75rem}.scsq-inline-badge .scsq-badge__proximity{font-size:.65rem}.scsq-proximity-note{color:#29464f;background:#eef7fb;border-inline-start:4px solid #0b5cab;border-radius:6px;margin-block-start:.9rem;margin-block-end:0;margin-inline-start:0;margin-inline-end:0;padding-block-start:.65rem;padding-block-end:.65rem;padding-inline-start:.75rem;padding-inline-end:.75rem;font-size:.82rem}.scsq-badge:focus-visible{outline-offset:2px;outline:3px solid #111}.scsq-copy-button:focus-visible{outline-offset:2px;outline:3px solid #111}.scsq-actions{align-items:center;gap:.75rem;margin-block-start:1rem;display:flex}.scsq-copy-button{-webkit-appearance:none;appearance:none;color:#fff;cursor:pointer;background:#006b73;border:2px solid #006b73;border-radius:7px;min-block-size:2.5rem;padding-block-start:.55rem;padding-block-end:.55rem;padding-inline-start:.9rem;padding-inline-end:.9rem;font:700 .9rem/1 Arial,Segoe UI,Tahoma,sans-serif}.scsq-copy-button:hover{background:#004f56;border-color:#004f56}.scsq-copy-status{color:#30474f;min-block-size:1.25rem}.scsq-note,.scsq-empty{color:#3f3600;unicode-bidi:plaintext;background:#fff8d8;border-inline-start:4px solid #8a6200;border-radius:5px;margin-block-start:1rem;margin-block-end:0;margin-inline-start:0;margin-inline-end:0;padding-block-start:.7rem;padding-block-end:.7rem;padding-inline-start:.8rem;padding-inline-end:.8rem}.scsq-empty{color:#3f4c52;background:#f1f4f5;border-inline-start-color:#6b7d85}.scsq-visually-hidden{clip:rect(0, 0, 0, 0)!important;white-space:nowrap!important;border:0!important;block-size:1px!important;inline-size:1px!important;margin:-1px!important;padding:0!important;position:absolute!important;overflow:hidden!important}.scsq-copy-fallback{position:fixed;top:0}.scsq-copy-fallback:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:-9999px}.scsq-copy-fallback:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:-9999px}.scsq-copy-fallback:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:-9999px}.scsq-copy-fallback:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:-9999px}@media (max-width:680px){.scsq-panel{padding:.9rem}.scsq-panel__header{display:block}.scsq-best{margin-block-start:.8rem}.scsq-metadata{grid-template-columns:max-content 1fr}}@media (prefers-reduced-motion:reduce){.scsq-panel *,.scsq-badge{scroll-behavior:auto!important;transition:none!important}}.scsq-mobile-layer,.scsq-mobile-layer *{box-sizing:border-box}.scsq-mobile-fab{z-index:2147483600;color:#fff;cursor:pointer;background:#064f58;border:2px solid #fff;border-radius:999px;align-items:center;gap:.55rem;min-block-size:3.25rem;padding-block-start:.45rem;padding-block-end:.45rem;padding-inline-start:.55rem;padding-inline-end:.85rem;font:700 .9rem/1 Arial,Segoe UI,Tahoma,sans-serif;display:inline-flex;position:fixed;bottom:max(18px, env(safe-area-inset-bottom));box-shadow:0 6px 22px #00000052}.scsq-mobile-fab:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:max(16px, env(safe-area-inset-right))}.scsq-mobile-fab__quartile{color:#fff;border-radius:1rem;flex-direction:column;justify-content:center;align-items:center;gap:.12rem;min-block-size:2.75rem;min-inline-size:2.75rem;padding-inline-start:.35rem;padding-inline-end:.35rem;font-weight:800;display:inline-flex}.scsq-mobile-fab__quartile-value{font-size:.92rem;line-height:1}.scsq-mobile-fab__version{color:inherit;letter-spacing:0;font-size:.56rem;font-weight:700;line-height:1}.scsq-mobile-fab__proximity{color:inherit;letter-spacing:0;white-space:nowrap;font-size:.52rem;font-weight:800;line-height:1}.scsq-mobile-fab__quartile--q1{background:#12663a}.scsq-mobile-fab__quartile--q2{background:#0b5cab}.scsq-mobile-fab__quartile--q3{background:#8a4b00}.scsq-mobile-fab__quartile--q4{background:#b42318}.scsq-mobile-fab__quartile--unknown{background:#5f6368}.scsq-mobile-fab:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-close:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-setting input:focus-visible{outline-offset:3px;outline:3px solid #111}.scsq-mobile-backdrop{z-index:2147483601;opacity:0;pointer-events:none;background:#07191f8a;border:0;block-size:100%;inline-size:100%;padding:0;transition:opacity .18s;display:block;position:fixed;top:0;bottom:0;left:0;right:0}.scsq-mobile-backdrop.is-open{opacity:1;pointer-events:auto}.scsq-mobile-drawer{z-index:2147483602;block-size:100vh;inline-size:min(94vw,500px);color:#172b35;text-align:start;visibility:hidden;background:#f3f7f8;border:0;flex-direction:column;block-size:100dvh;font-family:Arial,Segoe UI,Tahoma,sans-serif;transition:transform .2s,visibility 0s linear .2s;display:flex;position:fixed;top:0;bottom:0;transform:translate(105%);box-shadow:-8px 0 28px #00000047}.scsq-mobile-drawer:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:0}.scsq-mobile-drawer:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){right:0}.scsq-mobile-drawer:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:0}.scsq-mobile-drawer:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){left:0}:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)) .scsq-mobile-drawer{transform:translate(-105%);box-shadow:8px 0 28px #00000047}:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)) .scsq-mobile-drawer{transform:translate(-105%);box-shadow:8px 0 28px #00000047}.scsq-mobile-drawer.is-open{visibility:visible;transition:transform .2s;transform:translate(0)}.scsq-mobile-drawer__header{padding-block:max(.8rem, env(safe-area-inset-top)) .8rem;color:#fff;background:#0f5663;justify-content:space-between;align-items:center;gap:.75rem;padding-inline-start:1rem;padding-inline-end:1rem;display:flex}.scsq-mobile-drawer__title{color:inherit;margin:0;font:700 1.05rem/1.3 Arial,Segoe UI,Tahoma,sans-serif}.scsq-mobile-close{color:#0f3c47;cursor:pointer;background:#fff;border:2px solid #fff;border-radius:7px;min-block-size:2.5rem;padding-block-start:.45rem;padding-block-end:.45rem;padding-inline-start:.75rem;padding-inline-end:.75rem;font:700 .86rem/1 Arial,Segoe UI,Tahoma,sans-serif}.scsq-mobile-drawer__scroll{overscroll-behavior:contain;padding-block:.75rem max(1rem, env(safe-area-inset-bottom));flex:auto;padding-inline-start:.75rem;padding-inline-end:.75rem;overflow-y:auto}.scsq-mobile-setting{color:#19343d;background:#fff;border:1px solid #c7d9df;border-radius:8px;justify-content:space-between;align-items:center;gap:1rem;margin-block-end:.75rem;padding-block-start:.7rem;padding-block-end:.7rem;padding-inline-start:.85rem;padding-inline-end:.85rem;font:600 .9rem/1.3 Arial,Segoe UI,Tahoma,sans-serif;display:flex}.scsq-mobile-setting input{accent-color:#006b73;block-size:1.35rem;inline-size:1.35rem}.scsq-panel--mobile{box-shadow:none;border-inline-start-width:4px;border-radius:8px;margin:0;padding:.85rem}.scsq-panel--mobile .scsq-panel__header{display:block}.scsq-panel--mobile .scsq-best{margin-block-start:.7rem}.scsq-panel--mobile .scsq-metadata{grid-template-columns:max-content 1fr}.scsq-panel--mobile .scsq-table{min-inline-size:42rem}@media (max-width:540px){.scsq-mobile-fab__label{display:none}.scsq-mobile-fab{padding-inline-start:.45rem;padding-inline-end:.45rem}.scsq-mobile-drawer{inline-size:auto}.scsq-mobile-drawer:not(:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:0}.scsq-mobile-drawer:not(:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi))){left:0}.scsq-mobile-drawer:-webkit-any(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:0}.scsq-mobile-drawer:is(:lang(ae),:lang(ar),:lang(arc),:lang(bcc),:lang(bqi),:lang(ckb),:lang(dv),:lang(fa),:lang(glk),:lang(he),:lang(ku),:lang(mzn),:lang(nqo),:lang(pnb),:lang(ps),:lang(sd),:lang(ug),:lang(ur),:lang(yi)){right:0}.scsq-panel--mobile .scsq-table-wrap{border:0;overflow:visible}.scsq-panel--mobile .scsq-table,.scsq-panel--mobile .scsq-table tbody,.scsq-panel--mobile .scsq-table tr,.scsq-panel--mobile .scsq-table th,.scsq-panel--mobile .scsq-table td{inline-size:100%;min-inline-size:0;display:block}.scsq-panel--mobile .scsq-table thead{display:none}.scsq-panel--mobile .scsq-table tbody tr{background:#fff;border:1px solid #cedde2;border-radius:8px;margin-block-end:.75rem;overflow:hidden}.scsq-panel--mobile .scsq-table tbody tr:last-child{margin-block-end:0}.scsq-panel--mobile .scsq-table__category{color:#fff;background:#155766;border:0;padding-block-start:.75rem;padding-block-end:.75rem;padding-inline-start:.8rem;padding-inline-end:.8rem}.scsq-panel--mobile .scsq-table td{grid-template-columns:minmax(7.5rem,42%) minmax(0,1fr);align-items:center;gap:.65rem;padding-block-start:.6rem;padding-block-end:.6rem;padding-inline-start:.8rem;padding-inline-end:.8rem;display:grid}.scsq-panel--mobile .scsq-table td:before{content:attr(data-label);color:#425961;font-weight:700}.scsq-panel--mobile .scsq-table td>.scsq-badge{justify-self:start}}@media (prefers-reduced-motion:reduce){.scsq-mobile-backdrop,.scsq-mobile-drawer{transition:none}}");
 	var SOURCE_PERCENTILE = "Scopus percentile";
 	var SOURCE_RANK = "Estimated from rank";
 	function parsePercentile(value) {
@@ -84,6 +84,41 @@
 		if (percentile >= 50) return "Q2";
 		if (percentile >= 25) return "Q3";
 		return "Q4";
+	}
+	function proximityToBetterQuartile(value) {
+		const percentile = parsePercentile(value);
+		if (percentile === null) return null;
+		const quartile = quartileFromPercentile(percentile);
+		if (quartile === "Q1") return {
+			quartile,
+			percentile,
+			isHighest: true,
+			nextQuartile: null,
+			nextThreshold: null,
+			pointsToNext: null
+		};
+		const next = {
+			Q2: {
+				nextQuartile: "Q1",
+				nextThreshold: 75
+			},
+			Q3: {
+				nextQuartile: "Q2",
+				nextThreshold: 50
+			},
+			Q4: {
+				nextQuartile: "Q3",
+				nextThreshold: 25
+			}
+		}[quartile];
+		return {
+			quartile,
+			percentile,
+			isHighest: false,
+			nextQuartile: next.nextQuartile,
+			nextThreshold: next.nextThreshold,
+			pointsToNext: next.nextThreshold - percentile
+		};
 	}
 	function validateRank(rank, total) {
 		const parsedRank = typeof rank === "number" ? rank : Number(rank);
@@ -116,7 +151,8 @@
 			rank: input && input.rank ? validateRank(input.rank.rank, input.rank.total) : null,
 			estimated: false,
 			label: "CiteScore Quartile",
-			source: SOURCE_PERCENTILE
+			source: SOURCE_PERCENTILE,
+			proximity: proximityToBetterQuartile(displayedPercentile)
 		};
 		const validRank = input && input.rank ? validateRank(input.rank.rank, input.rank.total) : null;
 		const estimatedPercentile = validRank ? estimatedPercentileFromRank(validRank.rank, validRank.total) : null;
@@ -128,7 +164,8 @@
 			rank: validRank,
 			estimated: true,
 			label: "Estimated CiteScore Quartile",
-			source: SOURCE_RANK
+			source: SOURCE_RANK,
+			proximity: proximityToBetterQuartile(estimatedPercentile)
 		};
 		return {
 			category,
@@ -138,13 +175,22 @@
 			rank: null,
 			estimated: false,
 			label: "Unable to calculate",
-			source: "Unavailable"
+			source: "Unavailable",
+			proximity: null
 		};
 	}
-	function bestQuartile(results) {
+	function bestQuartileResult(results) {
 		if (!Array.isArray(results)) return null;
-		const valid = results.map((result) => result && /^Q[1-4]$/.test(result.quartile) ? result.quartile : null).filter(Boolean).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
-		return valid.length ? valid[0] : null;
+		const valid = results.filter((result) => result && /^Q[1-4]$/.test(result.quartile));
+		valid.sort((left, right) => {
+			const quartileDifference = Number(left.quartile.slice(1)) - Number(right.quartile.slice(1));
+			if (quartileDifference !== 0) return quartileDifference;
+			const leftPercentile = Number.isFinite(left.percentile) ? left.percentile : -1;
+			const percentileDifference = (Number.isFinite(right.percentile) ? right.percentile : -1) - leftPercentile;
+			if (percentileDifference !== 0) return percentileDifference;
+			return Number(left.estimated) - Number(right.estimated);
+		});
+		return valid[0] || null;
 	}
 	var CATEGORY_LABEL = /^(?:in\s+categor(?:y|ies)|subject\s+(?:category|field)|category)$/i;
 	var PERCENTILE_LABEL = /^(?:citescore\s+)?percentile$/i;
@@ -562,16 +608,38 @@
 		function removeInlineBadges() {
 			document.querySelectorAll(INLINE_SELECTOR).forEach((element) => element.remove());
 		}
+		function proximityFor(result) {
+			return result?.proximity || proximityToBetterQuartile(result?.percentile);
+		}
+		function compactProximityText(result) {
+			const proximity = proximityFor(result);
+			if (!proximity) return "unavailable";
+			if (proximity.isHighest) return result.estimated ? "≈ highest" : "highest";
+			return `${result.estimated ? "≈" : ""}${proximity.pointsToNext} pt to ${proximity.nextQuartile}`;
+		}
+		function proximitySummary(result) {
+			const proximity = proximityFor(result);
+			if (!proximity) return "Quartile proximity unavailable";
+			if (proximity.isHighest) return result.estimated ? "Estimated to be in the highest CiteScore quartile" : "Already in the highest CiteScore quartile";
+			const pointsLabel = proximity.pointsToNext === 1 ? "point" : "points";
+			return `${result.estimated ? "Estimated distance: " : ""}${proximity.pointsToNext} percentile ${pointsLabel} to ${proximity.nextQuartile} (threshold ${proximity.nextThreshold})`;
+		}
+		function bestCategoryItem(calculatedCategories) {
+			const bestResult = bestQuartileResult(calculatedCategories.map((item) => item.result));
+			return bestResult ? calculatedCategories.find((item) => item.result === bestResult) || null : null;
+		}
 		function resultTooltip(result, category, year) {
 			const safeCategory = sanitizeText(category, 240) || "this subject category";
 			const safeYear = sanitizeText(year, 20) || "unavailable";
 			if (!result.quartile) return `Unable to calculate a CiteScore quartile for ${safeCategory}, CiteScore year ${safeYear}.`;
-			if (result.estimated && result.rank) return `Estimated CiteScore ${result.quartile} calculated from rank ${result.rank.rank}/${result.rank.total} (estimated percentile ${result.percentile}) for ${safeCategory}, CiteScore year ${safeYear}.`;
-			return `CiteScore ${result.quartile} calculated from percentile ${result.percentile} for ${safeCategory}, CiteScore year ${safeYear}.`;
+			const proximitySentence = `${proximitySummary(result)}.`;
+			if (result.estimated && result.rank) return `Estimated CiteScore ${result.quartile} calculated from rank ${result.rank.rank}/${result.rank.total} (estimated percentile ${result.percentile}) for ${safeCategory}, CiteScore year ${safeYear}. ${proximitySentence}`;
+			return `CiteScore ${result.quartile} calculated from percentile ${result.percentile} for ${safeCategory}, CiteScore year ${safeYear}. ${proximitySentence}`;
 		}
 		function makeBadge(result, category, year, inline = false) {
 			const badge = createElement("span", `scsq-badge scsq-badge--${result.quartile ? result.quartile.toLowerCase() : "unknown"}`);
-			badge.textContent = result.quartile || "N/A";
+			badge.appendChild(createElement("span", "scsq-badge__quartile", result.quartile || "N/A"));
+			if (result.quartile) badge.appendChild(createElement("small", "scsq-badge__proximity", compactProximityText(result)));
 			badge.title = resultTooltip(result, category, year);
 			badge.setAttribute("aria-label", badge.title);
 			badge.dataset.scsqOwned = "true";
@@ -582,20 +650,21 @@
 			return badge;
 		}
 		function copyText(data, calculatedCategories) {
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const bestItem = bestCategoryItem(calculatedCategories);
+			const best = bestItem?.result || null;
 			const lines = [
 				"Scopus CiteScore Quartile",
 				`Source: ${data.title}`,
 				`CiteScore year: ${data.year}`,
 				`CiteScore value: ${data.citeScore}`,
-				`Best CiteScore Quartile: ${best || "Unable to calculate"}`,
+				`Best CiteScore Quartile: ${best ? `${best.quartile} | ${proximitySummary(best)} | Category: ${bestItem.category}` : "Unable to calculate"}`,
 				""
 			];
 			calculatedCategories.forEach(({ category, result }) => {
 				const percentile = result.displayedPercentile !== null ? `${result.displayedPercentile}%` : "Not displayed";
 				const rank = result.rank ? `${result.rank.rank}/${result.rank.total}` : "Not displayed";
 				const estimatedDetail = result.estimated ? ` | Estimated percentile: ${result.percentile}` : "";
-				lines.push(`${category} | Percentile: ${percentile} | Rank: ${rank}${estimatedDetail} | ${result.label}: ${result.quartile || "Unable to calculate"} | Source: ${result.source}`);
+				lines.push(`${category} | Percentile: ${percentile} | Rank: ${rank}${estimatedDetail} | ${result.label}: ${result.quartile || "Unable to calculate"} | Position: ${proximitySummary(result)} | Source: ${result.source}`);
 			});
 			lines.push("", "This is a CiteScore-based quartile calculated from Scopus percentile data. It is not a JCR or SCImago/SJR quartile. Quartiles may differ by subject category.");
 			return lines.join("\n");
@@ -632,16 +701,18 @@
 			heading.id = `${panel.id}-title`;
 			headingGroup.appendChild(heading);
 			headingGroup.appendChild(createElement("p", "scsq-panel__source-title", data.title));
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const bestItem = bestCategoryItem(calculatedCategories);
+			const best = bestItem?.result || null;
 			const bestBox = createElement("div", "scsq-best");
 			bestBox.appendChild(createElement("span", "scsq-best__label", "Best CiteScore Quartile:"));
-			const bestBadge = makeBadge({
-				quartile: best,
+			const bestBadge = makeBadge({ ...best || {
+				quartile: null,
 				percentile: null,
 				estimated: false,
-				rank: null
-			}, "all displayed subject categories", data.year);
-			bestBadge.title = best ? `Best CiteScore Quartile across the displayed subject categories: ${best}. CiteScore year ${data.year}.` : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
+				rank: null,
+				proximity: null
+			} }, bestItem?.category || "all displayed subject categories", data.year);
+			bestBadge.title = best ? `Best CiteScore Quartile across the displayed subject categories: ${best.quartile}, from ${bestItem.category}. ${proximitySummary(best)}. CiteScore year ${data.year}.` : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
 			bestBadge.setAttribute("aria-label", bestBadge.title);
 			bestBox.appendChild(bestBadge);
 			header.append(headingGroup, bestBox);
@@ -715,6 +786,7 @@
 			});
 			actions.append(copyButton, copyStatus);
 			panel.appendChild(actions);
+			panel.appendChild(createElement("p", "scsq-proximity-note", "Distance to the next better quartile is the percentile-point gap from the displayed percentile to that quartile's threshold. Rank-based distances are estimates and do not predict future movement."));
 			panel.appendChild(createElement("p", "scsq-note", "This is a CiteScore-based quartile calculated from Scopus percentile data. It is not a JCR or SCImago/SJR quartile. Quartiles may differ by subject category."));
 			return panel;
 		}
@@ -739,14 +811,14 @@
 			layer.id = MOBILE_LAYER_ID;
 			layer.dataset.scsqOwned = "true";
 			layer.dataset.scsqPanel = "true";
-			const best = bestQuartile(calculatedCategories.map((item) => item.result));
+			const best = bestCategoryItem(calculatedCategories)?.result || null;
 			const fab = createElement("button", "scsq-mobile-fab");
 			fab.type = "button";
 			fab.setAttribute("aria-controls", MOBILE_DRAWER_ID);
 			fab.setAttribute("aria-expanded", String(mobileDrawerOpen));
-			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best || "unavailable"}.${version ? ` Version ${version}.` : ""}`);
-			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.toLowerCase() : "unknown"}`);
-			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best || "Q?"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
+			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best ? `${best.quartile}. ${proximitySummary(best)}.` : "unavailable."}${version ? ` Version ${version}.` : ""}`);
+			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.quartile.toLowerCase() : "unknown"}`);
+			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best?.quartile || "Q?"), createElement("small", "scsq-mobile-fab__proximity", best ? compactProximityText(best) : "unavailable"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
 			fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
 			const backdrop = createElement("button", "scsq-mobile-backdrop");
 			backdrop.type = "button";

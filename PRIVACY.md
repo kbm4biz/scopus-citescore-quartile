@@ -1,8 +1,8 @@
 # Privacy Policy — Scopus CiteScore Quartile
 
-Last updated: 26 July 2026
+Last updated: 2 August 2026
 
-Scopus CiteScore Quartile works locally in the user's browser. Version 2.1 uses one universal userscript as the primary product and a Chrome Manifest V3 extension as a secondary desktop fallback.
+Scopus CiteScore Quartile works locally in the user's browser. Version 2.2 uses one universal userscript as the primary product and a Chrome Manifest V3 extension as a secondary desktop fallback.
 
 ## Page data processed
 
@@ -33,6 +33,8 @@ Only three Boolean display preferences are stored by the page tool:
 The userscript uses the manager's `GM_getValue` and `GM_setValue`. A limited `localStorage` fallback is available when the GM storage API is missing. The fallback extension uses `chrome.storage.sync`; Chrome may synchronize those Boolean values through the user's own account, depending on browser configuration.
 
 No journal title, category, percentile, rank, CiteScore, or copied result is stored in these settings.
+
+The distance to the next better quartile is calculated locally from the same displayed or estimated percentile. It is not stored or transmitted.
 
 The GitHub Pages installation page may store two local preferences: language (`en` or `ar`) and the selected platform instructions. They remain in that browser and contain no Scopus or personal data. Platform detection uses the browser's local user-agent information and is not transmitted.
 

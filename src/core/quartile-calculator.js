@@ -50,6 +50,40 @@
     return "Q4";
   }
 
+  function proximityToBetterQuartile(value) {
+    const percentile = parsePercentile(value);
+    if (percentile === null) {
+      return null;
+    }
+
+    const quartile = quartileFromPercentile(percentile);
+    if (quartile === "Q1") {
+      return {
+        quartile,
+        percentile,
+        isHighest: true,
+        nextQuartile: null,
+        nextThreshold: null,
+        pointsToNext: null
+      };
+    }
+
+    const nextByQuartile = {
+      Q2: { nextQuartile: "Q1", nextThreshold: 75 },
+      Q3: { nextQuartile: "Q2", nextThreshold: 50 },
+      Q4: { nextQuartile: "Q3", nextThreshold: 25 }
+    };
+    const next = nextByQuartile[quartile];
+    return {
+      quartile,
+      percentile,
+      isHighest: false,
+      nextQuartile: next.nextQuartile,
+      nextThreshold: next.nextThreshold,
+      pointsToNext: next.nextThreshold - percentile
+    };
+  }
+
   function validateRank(rank, total) {
     const parsedRank = typeof rank === "number" ? rank : Number(rank);
     const parsedTotal = typeof total === "number" ? total : Number(total);
@@ -105,7 +139,8 @@
         rank: input && input.rank ? validateRank(input.rank.rank, input.rank.total) : null,
         estimated: false,
         label: "CiteScore Quartile",
-        source: SOURCE_PERCENTILE
+        source: SOURCE_PERCENTILE,
+        proximity: proximityToBetterQuartile(displayedPercentile)
       };
     }
 
@@ -125,7 +160,8 @@
         rank: validRank,
         estimated: true,
         label: "Estimated CiteScore Quartile",
-        source: SOURCE_RANK
+        source: SOURCE_RANK,
+        proximity: proximityToBetterQuartile(estimatedPercentile)
       };
     }
 
@@ -137,20 +173,37 @@
       rank: null,
       estimated: false,
       label: "Unable to calculate",
-      source: "Unavailable"
+      source: "Unavailable",
+      proximity: null
     };
   }
 
-  function bestQuartile(results) {
+  function bestQuartileResult(results) {
     if (!Array.isArray(results)) {
       return null;
     }
 
-    const valid = results
-      .map((result) => (result && /^Q[1-4]$/.test(result.quartile) ? result.quartile : null))
-      .filter(Boolean)
-      .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
-    return valid.length ? valid[0] : null;
+    const valid = results.filter(
+      (result) => result && /^Q[1-4]$/.test(result.quartile)
+    );
+    valid.sort((left, right) => {
+      const quartileDifference = Number(left.quartile.slice(1)) - Number(right.quartile.slice(1));
+      if (quartileDifference !== 0) {
+        return quartileDifference;
+      }
+      const leftPercentile = Number.isFinite(left.percentile) ? left.percentile : -1;
+      const rightPercentile = Number.isFinite(right.percentile) ? right.percentile : -1;
+      const percentileDifference = rightPercentile - leftPercentile;
+      if (percentileDifference !== 0) {
+        return percentileDifference;
+      }
+      return Number(left.estimated) - Number(right.estimated);
+    });
+    return valid[0] || null;
+  }
+
+  function bestQuartile(results) {
+    return bestQuartileResult(results)?.quartile || null;
   }
 
 export {
@@ -158,9 +211,11 @@ export {
   SOURCE_RANK,
   parsePercentile,
   quartileFromPercentile,
+  proximityToBetterQuartile,
   validateRank,
   parseRank,
   estimatedPercentileFromRank,
   calculateCategory,
+  bestQuartileResult,
   bestQuartile
 };
