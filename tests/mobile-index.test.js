@@ -16,8 +16,10 @@ test("client installation page provides equivalent English and Arabic routes", (
   assert.match(html, /تثبيت أداة أرباع/);
   assert.match(html, /Updates:/);
   assert.match(html, /التحديثات:/);
-  assert.match(html, /percentile-point distance to the next better quartile/);
-  assert.match(html, /المسافة بالنقاط المئينية إلى الربع الأفضل التالي/);
+  assert.match(html, /distance to the next better quartile/);
+  assert.match(html, /المسافة إلى الربع الأفضل التالي/);
+  assert.match(html, /mini 0–100 percentile scale/);
+  assert.match(html, /مقياس مئيني مصغّر من 0 إلى 100/);
   assert.match(html, /document\.documentElement\.dir = selected === "ar" \? "rtl" : "ltr"/);
   assert.equal(
     (html.match(/href="\.\/scopus-citescore-quartile\.user\.js"/g) || []).length,

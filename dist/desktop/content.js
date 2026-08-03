@@ -595,6 +595,74 @@
 			}
 			return badge;
 		}
+		function makePercentileScale(result, category, { compact = false } = {}) {
+			const percentile = parsePercentile(result?.percentile);
+			const scale = createElement("span", `scsq-percentile-scale${compact ? " scsq-percentile-scale--compact" : ""}${result?.estimated ? " is-estimated" : ""}`);
+			scale.dataset.scsqScale = "true";
+			scale.dir = "ltr";
+			const safeCategory = sanitizeText(category, 240) || "this subject category";
+			if (percentile === null || !result?.quartile) {
+				scale.classList.add("is-unavailable");
+				scale.textContent = "Percentile position unavailable";
+				scale.setAttribute("role", "img");
+				scale.setAttribute("aria-label", `Percentile position unavailable for ${safeCategory}.`);
+				return scale;
+			}
+			const accessibleText = `${result.estimated ? "Estimated " : ""}Scopus percentile ${percentile}, ${result.quartile}, ${proximitySummary(result)}, for ${safeCategory}.`;
+			scale.style.setProperty("--scsq-percentile-position", `${percentile}%`);
+			scale.setAttribute("role", "img");
+			scale.setAttribute("aria-label", accessibleText);
+			scale.title = accessibleText;
+			const track = createElement("span", "scsq-percentile-scale__track");
+			[
+				[
+					"Q4",
+					"q4",
+					"Percentile 0 to 24"
+				],
+				[
+					"Q3",
+					"q3",
+					"Percentile 25 to 49"
+				],
+				[
+					"Q2",
+					"q2",
+					"Percentile 50 to 74"
+				],
+				[
+					"Q1",
+					"q1",
+					"Percentile 75 to 100"
+				]
+			].forEach(([quartile, className, range]) => {
+				const segment = createElement("span", `scsq-percentile-scale__segment scsq-percentile-scale__segment--${className}`, quartile);
+				segment.title = `${quartile}: ${range}`;
+				segment.setAttribute("aria-hidden", "true");
+				track.appendChild(segment);
+			});
+			const marker = createElement("span", "scsq-percentile-scale__marker");
+			marker.setAttribute("aria-hidden", "true");
+			track.appendChild(marker);
+			scale.appendChild(track);
+			if (!compact) {
+				const ticks = createElement("span", "scsq-percentile-scale__ticks");
+				[
+					"0",
+					"25",
+					"50",
+					"75",
+					"100"
+				].forEach((tick) => {
+					ticks.appendChild(createElement("span", "", tick));
+				});
+				ticks.setAttribute("aria-hidden", "true");
+				scale.appendChild(ticks);
+			}
+			const percentilePrefix = result.estimated ? "≈P" : "P";
+			scale.appendChild(createElement("small", "scsq-percentile-scale__summary", compact ? `${percentilePrefix}${percentile}` : `${result.estimated ? "Estimated percentile" : "Percentile"} ${percentile} · ${compactProximityText(result)}`));
+			return scale;
+		}
 		function copyText(data, calculatedCategories) {
 			const bestItem = bestCategoryItem(calculatedCategories);
 			const best = bestItem?.result || null;
@@ -661,6 +729,7 @@
 			bestBadge.title = best ? `Best CiteScore Quartile across the displayed subject categories: ${best.quartile}, from ${bestItem.category}. ${proximitySummary(best)}. CiteScore year ${data.year}.` : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
 			bestBadge.setAttribute("aria-label", bestBadge.title);
 			bestBox.appendChild(bestBadge);
+			if (best) bestBox.appendChild(makePercentileScale(best, `Best category: ${bestItem.category}`, { compact: true }));
 			header.append(headingGroup, bestBox);
 			panel.appendChild(header);
 			const metadata = createElement("dl", "scsq-metadata");
@@ -698,9 +767,11 @@
 					const rankCell = createElement("td", "", result.rank ? `${result.rank.rank}/${result.rank.total}` : "Not displayed");
 					rankCell.dataset.label = "Rank";
 					const quartileCell = document.createElement("td");
+					quartileCell.className = "scsq-table__quartile";
 					quartileCell.dataset.label = "Quartile";
 					quartileCell.appendChild(makeBadge(result, category, data.year));
 					if (result.estimated) quartileCell.appendChild(createElement("span", "scsq-quartile-type", "Estimated CiteScore Quartile"));
+					quartileCell.appendChild(makePercentileScale(result, category));
 					const calculationCell = createElement("td", result.estimated ? "scsq-calculation scsq-calculation--estimated" : "scsq-calculation");
 					calculationCell.dataset.label = "Calculation source";
 					calculationCell.appendChild(createElement("span", "scsq-calculation__source", result.source));
@@ -757,7 +828,8 @@
 			layer.id = MOBILE_LAYER_ID;
 			layer.dataset.scsqOwned = "true";
 			layer.dataset.scsqPanel = "true";
-			const best = bestCategoryItem(calculatedCategories)?.result || null;
+			const bestItem = bestCategoryItem(calculatedCategories);
+			const best = bestItem?.result || null;
 			const fab = createElement("button", "scsq-mobile-fab");
 			fab.type = "button";
 			fab.setAttribute("aria-controls", MOBILE_DRAWER_ID);
@@ -765,7 +837,11 @@
 			fab.setAttribute("aria-label", `Open category-specific CiteScore quartile results. Best result: ${best ? `${best.quartile}. ${proximitySummary(best)}.` : "unavailable."}${version ? ` Version ${version}.` : ""}`);
 			const fabQuartile = createElement("span", `scsq-mobile-fab__quartile scsq-mobile-fab__quartile--${best ? best.quartile.toLowerCase() : "unknown"}`);
 			fabQuartile.append(createElement("span", "scsq-mobile-fab__quartile-value", best?.quartile || "Q?"), createElement("small", "scsq-mobile-fab__proximity", best ? compactProximityText(best) : "unavailable"), createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : ""));
-			fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
+			const fabSummary = createElement("span", "scsq-mobile-fab__summary");
+			fabSummary.appendChild(createElement("span", "scsq-mobile-fab__label", "Best category"));
+			if (best) fabSummary.appendChild(makePercentileScale(best, `Best category: ${bestItem.category}`, { compact: true }));
+			else fabSummary.appendChild(createElement("small", "scsq-mobile-fab__unavailable", "No percentile"));
+			fab.append(fabQuartile, fabSummary);
 			const backdrop = createElement("button", "scsq-mobile-backdrop");
 			backdrop.type = "button";
 			backdrop.tabIndex = -1;

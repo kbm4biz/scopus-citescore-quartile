@@ -1,6 +1,6 @@
 {
   "name": "scopus-citescore-quartile",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "description": "A universal desktop/mobile userscript with a Manifest V3 fallback, built from one Vite codebase.",

@@ -1,6 +1,6 @@
 # Scopus CiteScore Quartile
 
-Version 2.2.0 uses one vanilla JavaScript codebase to create:
+Version 2.3.0 uses one vanilla JavaScript codebase to create:
 
 - one universal Tampermonkey userscript for supported desktop and mobile browsers; and
 - one Chrome Manifest V3 extension as a secondary desktop fallback.
@@ -95,6 +95,19 @@ Every visible Q badge also shows the current category's exact percentile-point g
 - Q1 shows **highest** because no better quartile exists.
 
 This distance is calculated from the category-specific Scopus percentile, never from the absolute CiteScore. It describes the current threshold position; it does not predict that the source will move to another quartile. When only rank is available, the badge uses `≈` and the panel labels the distance as estimated.
+
+### Visual percentile scale
+
+Version 2.3 adds a segmented global scale to make that distance visible:
+
+```text
+0              25             50             75             100
+|---- Q4 -------|---- Q3 ------|---- Q2 ------|---- Q1 -------|
+```
+
+Each category row has its own marker on this real 0–100 Scopus percentile scale. The floating control shows the marker for the **Best displayed category** and labels it as Best; it does not replace the separate category rows. A solid marker represents a displayed Scopus percentile, while a dashed marker and `≈P` label represent a rank-based estimate.
+
+The bar always retains text containing the percentile, quartile, next threshold, and category. Colour is supplementary rather than the only means of interpretation.
 
 ### Estimated rank fallback
 
@@ -212,7 +225,7 @@ See [PRIVACY.md](PRIVACY.md) and [TEST-REPORT.md](TEST-REPORT.md).
 
 ## Testing disclosure
 
-**Version 2.2.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in Chrome against realistic local fixtures, including different placements within the same quartile, delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the fallback MV3 load, desktop/narrow userscript UI, and the bilingual platform-specific client page.
+**Version 2.3.0 was not verified on a logged-in live Scopus page.** No authenticated Scopus session was available in the development environment. It was tested in Chrome against realistic local fixtures, including visual 0–100 scales, different placements within the same quartile, delayed updates, variant layouts, rank-only fallback, multiple quartiles, duplicate prevention, the fallback MV3 load, desktop/narrow userscript UI, and the bilingual platform-specific client page.
 
 The GitHub workflow and live Pages files were also verified after publishing. Physical iPhone/Android installation and every possible userscript manager were not tested.
 

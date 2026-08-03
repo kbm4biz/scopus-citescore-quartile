@@ -126,6 +126,72 @@ export function initialiseScopusApp({
     return badge;
   }
 
+  function makePercentileScale(result, category, { compact = false } = {}) {
+    const percentile = calculator.parsePercentile(result?.percentile);
+    const scale = createElement(
+      "span",
+      `scsq-percentile-scale${compact ? " scsq-percentile-scale--compact" : ""}${result?.estimated ? " is-estimated" : ""}`
+    );
+    scale.dataset.scsqScale = "true";
+    scale.dir = "ltr";
+
+    const safeCategory = parser.sanitizeText(category, 240) || "this subject category";
+    if (percentile === null || !result?.quartile) {
+      scale.classList.add("is-unavailable");
+      scale.textContent = "Percentile position unavailable";
+      scale.setAttribute("role", "img");
+      scale.setAttribute("aria-label", `Percentile position unavailable for ${safeCategory}.`);
+      return scale;
+    }
+
+    const estimatedLabel = result.estimated ? "Estimated " : "";
+    const accessibleText = `${estimatedLabel}Scopus percentile ${percentile}, ${result.quartile}, ${proximitySummary(result)}, for ${safeCategory}.`;
+    scale.style.setProperty("--scsq-percentile-position", `${percentile}%`);
+    scale.setAttribute("role", "img");
+    scale.setAttribute("aria-label", accessibleText);
+    scale.title = accessibleText;
+
+    const track = createElement("span", "scsq-percentile-scale__track");
+    [
+      ["Q4", "q4", "Percentile 0 to 24"],
+      ["Q3", "q3", "Percentile 25 to 49"],
+      ["Q2", "q2", "Percentile 50 to 74"],
+      ["Q1", "q1", "Percentile 75 to 100"]
+    ].forEach(([quartile, className, range]) => {
+      const segment = createElement(
+        "span",
+        `scsq-percentile-scale__segment scsq-percentile-scale__segment--${className}`,
+        quartile
+      );
+      segment.title = `${quartile}: ${range}`;
+      segment.setAttribute("aria-hidden", "true");
+      track.appendChild(segment);
+    });
+    const marker = createElement("span", "scsq-percentile-scale__marker");
+    marker.setAttribute("aria-hidden", "true");
+    track.appendChild(marker);
+    scale.appendChild(track);
+
+    if (!compact) {
+      const ticks = createElement("span", "scsq-percentile-scale__ticks");
+      ["0", "25", "50", "75", "100"].forEach((tick) => {
+        ticks.appendChild(createElement("span", "", tick));
+      });
+      ticks.setAttribute("aria-hidden", "true");
+      scale.appendChild(ticks);
+    }
+
+    const percentilePrefix = result.estimated ? "≈P" : "P";
+    scale.appendChild(createElement(
+      "small",
+      "scsq-percentile-scale__summary",
+      compact
+        ? `${percentilePrefix}${percentile}`
+        : `${result.estimated ? "Estimated percentile" : "Percentile"} ${percentile} · ${compactProximityText(result)}`
+    ));
+    return scale;
+  }
+
   function copyText(data, calculatedCategories) {
     const bestItem = bestCategoryItem(calculatedCategories);
     const best = bestItem?.result || null;
@@ -217,6 +283,9 @@ export function initialiseScopusApp({
       : `Best CiteScore Quartile could not be calculated. CiteScore year ${data.year}.`;
     bestBadge.setAttribute("aria-label", bestBadge.title);
     bestBox.appendChild(bestBadge);
+    if (best) {
+      bestBox.appendChild(makePercentileScale(best, `Best category: ${bestItem.category}`, { compact: true }));
+    }
     header.append(headingGroup, bestBox);
     panel.appendChild(header);
 
@@ -258,11 +327,13 @@ export function initialiseScopusApp({
         );
         rankCell.dataset.label = "Rank";
         const quartileCell = document.createElement("td");
+        quartileCell.className = "scsq-table__quartile";
         quartileCell.dataset.label = "Quartile";
         quartileCell.appendChild(makeBadge(result, category, data.year));
         if (result.estimated) {
           quartileCell.appendChild(createElement("span", "scsq-quartile-type", "Estimated CiteScore Quartile"));
         }
+        quartileCell.appendChild(makePercentileScale(result, category));
         const calculationCell = createElement(
           "td",
           result.estimated ? "scsq-calculation scsq-calculation--estimated" : "scsq-calculation"
@@ -372,7 +443,14 @@ export function initialiseScopusApp({
       createElement("small", "scsq-mobile-fab__proximity", best ? compactProximityText(best) : "unavailable"),
       createElement("small", "scsq-mobile-fab__version", version ? `v${version}` : "")
     );
-    fab.append(fabQuartile, createElement("span", "scsq-mobile-fab__label", "CiteScore"));
+    const fabSummary = createElement("span", "scsq-mobile-fab__summary");
+    fabSummary.appendChild(createElement("span", "scsq-mobile-fab__label", "Best category"));
+    if (best) {
+      fabSummary.appendChild(makePercentileScale(best, `Best category: ${bestItem.category}`, { compact: true }));
+    } else {
+      fabSummary.appendChild(createElement("small", "scsq-mobile-fab__unavailable", "No percentile"));
+    }
+    fab.append(fabQuartile, fabSummary);
 
     const backdrop = createElement("button", "scsq-mobile-backdrop");
     backdrop.type = "button";

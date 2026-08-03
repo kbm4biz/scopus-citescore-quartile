@@ -319,7 +319,7 @@ const html = `<!doctype html>
 
     <section data-language-panel="en">
       <h1>One userscript for desktop and mobile</h1>
-      <p class="intro">See every category's CiteScore Q and its percentile-point distance to the next better quartile. Choose your browser, install Tampermonkey once, then install the tool.</p>
+      <p class="intro">See every category's CiteScore Q, its distance to the next better quartile, and its marker on a mini 0–100 percentile scale. Choose your browser, install Tampermonkey once, then install the tool.</p>
 
       <h2 class="step-title">Step 1 — Choose your platform</h2>
       <div class="platform-switch" role="tablist" aria-label="Choose your platform">
@@ -389,7 +389,7 @@ const html = `<!doctype html>
 
     <section data-language-panel="ar" lang="ar" dir="rtl" hidden>
       <h1>سكربت واحد للكمبيوتر والجوال</h1>
-      <p class="intro">اعرض ربع <bdi dir="ltr">CiteScore</bdi> لكل تصنيف والمسافة بالنقاط المئينية إلى الربع الأفضل التالي. اختر متصفحك، وثبّت <bdi dir="ltr">Tampermonkey</bdi> مرة واحدة، ثم ثبّت الأداة.</p>
+      <p class="intro">اعرض ربع <bdi dir="ltr">CiteScore</bdi> لكل تصنيف، والمسافة إلى الربع الأفضل التالي، وموضعه على مقياس مئيني مصغّر من 0 إلى 100. اختر متصفحك، وثبّت <bdi dir="ltr">Tampermonkey</bdi> مرة واحدة، ثم ثبّت الأداة.</p>
 
       <h2 class="step-title">الخطوة 1 — اختر المنصة</h2>
       <div class="platform-switch" role="tablist" aria-label="اختر المنصة">

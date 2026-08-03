@@ -185,6 +185,9 @@ try {
   assert.match(multiple, /Q3[\s\S]*?1 pt to Q2/);
   assert.match(multiple, /Q4[\s\S]*?1 pt to Q3/);
   assert.match(multiple, /Distance to the next better quartile is the percentile-point gap/);
+  assert.equal(count(multiple, 'data-scsq-scale="true"'), 5, "best summary and all four category rows should include percentile scales");
+  assert.match(multiple, /Scopus percentile 74, Q2, 1 percentile point to Q1 \(threshold 75\)/);
+  assert.match(multiple, /--scsq-percentile-position: 74%/);
 
   const sameQuartile = await renderFixture(chromePath, baseUrl, "same-quartile-proximity.html");
   assert.equal(count(sameQuartile, 'data-scsq-inline="true"'), 2, "same-quartile fixture should add two inline badges");
@@ -193,6 +196,10 @@ try {
   assert.equal(count(sameQuartile, '>25 pt to Q2</small>'), 2, "percentile 25 should show twenty-five points to Q2");
   assert.match(sameQuartile, /1 percentile point to Q2 \(threshold 50\)/);
   assert.match(sameQuartile, /25 percentile points to Q2 \(threshold 50\)/);
+  assert.equal(count(sameQuartile, 'data-scsq-scale="true"'), 3, "best summary and both Q3 categories should include scales");
+  assert.match(sameQuartile, /--scsq-percentile-position: 49%/);
+  assert.match(sameQuartile, /--scsq-percentile-position: 25%/);
+  assert.match(sameQuartile, /scsq-percentile-scale__ticks[\s\S]*?>0<[\s\S]*?>25<[\s\S]*?>50<[\s\S]*?>75<[\s\S]*?>100</);
 
   const delayed = await renderFixture(chromePath, baseUrl, "delayed-content.html", 2400);
   assert.equal(count(delayed, 'data-scsq-panel="true"'), 1, "delayed fixture should receive one panel after rendering");
@@ -207,6 +214,8 @@ try {
   assert.match(rankOnly, /42\/320/);
   assert.match(rankOnly, /scsq-badge--q1/);
   assert.match(rankOnly, /≈ highest/);
+  assert.match(rankOnly, /scsq-percentile-scale[^>]*is-estimated/);
+  assert.match(rankOnly, /≈P87/);
 
   const variation = await renderFixture(chromePath, baseUrl, "layout-variation.html");
   assert.equal(count(variation, 'data-scsq-inline="true"'), 2, "hidden unrelated category must not be scraped");
@@ -231,6 +240,9 @@ try {
   );
   assert.match(userscript, /scsq-mobile-fab__proximity[^>]*>highest</);
   assert.equal(count(userscript, 'class="scsq-badge__proximity"'), 9, "every userscript panel, best, and inline Q badge should include proximity");
+  assert.equal(count(userscript, 'data-scsq-scale="true"'), 6, "floating summary, best summary, and four category rows should include scales");
+  assert.match(userscript, /scsq-mobile-fab__label[^>]*>Best category</);
+  assert.match(userscript, /scsq-mobile-fab__summary[\s\S]*?P99/);
   assert.equal(count(userscript, 'data-scsq-inline="true"'), 4, "userscript fixture should add one inline badge per category");
   for (const quartile of ["q1", "q2", "q3", "q4"]) {
     assert.match(userscript, new RegExp(`scsq-badge--${quartile}`), `userscript fixture should include ${quartile.toUpperCase()}`);

@@ -1,16 +1,16 @@
 # Test Report
 
-Build: Scopus CiteScore Quartile 2.2.0
+Build: Scopus CiteScore Quartile 2.3.0
 
-Validation date: 2 August 2026
+Validation date: 3 August 2026
 
 Local platform: Windows, Node.js 24.4.0, Google Chrome 150.0.7871.187
 
 ## Automated results
 
 - Vite extension and universal-userscript production builds: **passed**.
-- Node calculator/parser/manifest/settings/client-page tests: **23 passed, 0 failed**.
-- Extension/userscript/client-page headless-Chrome scenarios: **10 passed, 0 failed**.
+- Node calculator/parser/manifest/settings/client-page tests: **23 passed**.
+- Extension/userscript/client-page headless-Chrome scenarios: **10 passed**.
 - Manifest V3 unpacked-extension load smoke: **passed**.
 - Referenced-file and no-remote-script checks: **passed**.
 - Userscript metadata, grant, match, self-contained, and no-`@require` checks: **passed**.
@@ -33,6 +33,7 @@ Coverage includes:
 14. Proximity text in panel, best-summary, inline, tooltip, and floating-control paths.
 15. Universal floating action button with its installed-version label, full-height drawer, and inline badges at desktop and narrow-mobile widths.
 16. English/Arabic client-page parity, RTL layout, local platform detection, four platform selectors, migration warning, and one shared installation target.
+17. Global 0–100 segmented scales, exact percentile markers, Best-category floating summary, per-category bars, estimated-marker styling, and accessible text equivalents.
 
 ## Visual fixture inspection
 
@@ -51,7 +52,7 @@ Twelve screenshots are generated in `tests/screenshots/`:
 - `client-install-en.png`
 - `client-install-ar.png`
 
-Inspection covers the category table, same-quartile proximity differences, distinct Q colours, estimation labels, best summary, information note, duplicate prevention, desktop/narrow userscript drawer, floating version control, safe scrolling, delayed data, English/Arabic installation paths, four platform choices, and RTL layout.
+Inspection covers the segmented percentile scales and markers, category table, same-quartile proximity differences, distinct Q colours, estimation labels, Best-category floating summary, information note, duplicate prevention, desktop/narrow userscript drawer, floating version control, safe scrolling, delayed data, English/Arabic installation paths, four platform choices, and RTL layout.
 
 ## Deployment checks
 
@@ -61,6 +62,6 @@ The GitHub workflow, published Pages client, `.user.js`, `.meta.js`, version, an
 
 ## Live-site and device disclosure
 
-No authenticated Scopus session was available. Version 2.2.0 was **not** verified on a logged-in live Scopus Source Details page. Validation uses realistic local fixtures.
+No authenticated Scopus session was available. Version 2.3.0 was **not** verified on a logged-in live Scopus Source Details page. Validation uses realistic local fixtures.
 
 No claim is made that this build was physically installed in iPhone Safari, Android Firefox/Edge, or every userscript manager. Those device/manager combinations remain client-environment checks.

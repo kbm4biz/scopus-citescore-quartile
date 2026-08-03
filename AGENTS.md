@@ -72,6 +72,9 @@ tests/                       Unit, browser, fixture, and visual tests
 - If the top band has no better threshold, label it as the highest band rather than inventing a distance.
 - If the underlying value is estimated, visibly mark the threshold distance as estimated too.
 - Describe threshold distance as the current position, not a prediction that the result will improve later.
+- If visualising the position, anchor the scale to the real global measure and its real thresholds. Do not rebase every band to an unexplained local 0-based scale.
+- Label a floating summary as the Best displayed category and keep separate visual scales for every category in the expanded results.
+- Provide a complete text equivalent and marker for every scale; colour must never be the only way to read it.
 - Cover boundary values, different positions within the same band, best-summary selection, inline results, floating controls, and responsive layouts in tests.
 
 ## Bilingual client installation page

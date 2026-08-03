@@ -1,8 +1,8 @@
 # Privacy Policy — Scopus CiteScore Quartile
 
-Last updated: 2 August 2026
+Last updated: 3 August 2026
 
-Scopus CiteScore Quartile works locally in the user's browser. Version 2.2 uses one universal userscript as the primary product and a Chrome Manifest V3 extension as a secondary desktop fallback.
+Scopus CiteScore Quartile works locally in the user's browser. Version 2.3 uses one universal userscript as the primary product and a Chrome Manifest V3 extension as a secondary desktop fallback.
 
 ## Page data processed
 
@@ -35,6 +35,8 @@ The userscript uses the manager's `GM_getValue` and `GM_setValue`. A limited `lo
 No journal title, category, percentile, rank, CiteScore, or copied result is stored in these settings.
 
 The distance to the next better quartile is calculated locally from the same displayed or estimated percentile. It is not stored or transmitted.
+
+The visual percentile scale is rendered locally with HTML and CSS from that same value. It does not load a chart service or remote library.
 
 The GitHub Pages installation page may store two local preferences: language (`en` or `ar`) and the selected platform instructions. They remain in that browser and contain no Scopus or personal data. Platform detection uses the browser's local user-agent information and is not transmitted.
 
